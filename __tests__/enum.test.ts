@@ -1,5 +1,7 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable sonarjs/no-duplicate-string */
-import {get, getter, makeDeepEnumString, makePathEnum, set} from '../src/enum';
+import {get, getDeepPaths, getDeepValues, getter, makeDeepEnumString, makePathEnum, set} from '../src/enum';
+import {DeepValueOf, DeepKeyOf, IfEquals} from '../src/types';
 
 const cmsIds = {
   page1: {
@@ -25,6 +27,7 @@ const landmark = {
     properties: {
       city: 'San Francisco',
       isOpen: true,
+      isCold: true,
       '1': 1,
     },
     geometry: {
@@ -125,6 +128,49 @@ describe('testing enum functions', () => {
     expect(get(landmarkCopy, pathEnum.location.properties.city)).toBe('Los Angeles');
   });
 
-  // type PathEnumType = typeof pathEnum;
-  // type PathEnumTypeKeys = GetNestedKeys<PathEnumType, 'location'>;
+  it('should be able to get the unique keys/paths from an object', () => {
+    const paths = [
+      'name',
+      'location.type',
+      'location.properties.city',
+      'location.properties.isOpen',
+      'location.properties.isCold',
+      'location.properties.1',
+      'location.geometry.coordinates',
+      'history.opened',
+      'history.closed',
+      'history.length',
+    ] as const;
+
+    type actualPathsType = typeof paths[number];
+    type expectedPathsType = DeepKeyOf<typeof landmark>;
+    const _typecheck: IfEquals<actualPathsType, expectedPathsType> = true;
+
+    const actualPaths = getDeepPaths(landmark).sort();
+    const expectedPaths = [...paths].sort();
+    expect(actualPaths).toEqual(expectedPaths);
+  });
+
+  it('should be able to get all of the deeply nested values from an object', () => {
+    const values = [
+      'Golden Gate Bridge',
+      'Feature',
+      'San Francisco',
+      true,
+      true,
+      1,
+      [-122.4804438, 37.8199328],
+      null,
+      undefined,
+      BigInt(9007199254740991),
+    ] as const;
+
+    type actualValuesType = typeof values[number];
+    type expectedValuesType = DeepValueOf<typeof landmark>;
+    const _typecheck: IfEquals<actualValuesType, expectedValuesType> = true;
+
+    const actualValues = getDeepValues(landmark).sort();
+    const expectedValues = [...values].sort();
+    expect(actualValues).toEqual(expectedValues);
+  });
 });

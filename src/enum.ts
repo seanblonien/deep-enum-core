@@ -1,13 +1,14 @@
 import {
   DeepPaths,
   Initializer,
+  NestedValue,
   Path,
   PathValue,
   Pojo,
   Primitive,
   ValidateDeepEnumString,
 } from './types';
-import {deepFreeze, getInitializer, isPlainObject} from './utils';
+import {deepFreeze, flattenObject, getInitializer, isPlainObject} from './utils';
 
 export const makeDeepEnumString = <T extends Pojo>(obj: T) => {
   const result = deepFreeze(obj);
@@ -52,15 +53,14 @@ export const set = <S extends Pojo, P extends Path<S>>(
   options: {isMutable?: boolean} = {isMutable: false},
 ) => setRecurse(obj, path.split('.'), value, options) as S;
 
-function processProperties(obj: Pojo, previousPaths?: string[]) {
-  return Object.keys(obj).reduce((a, c) => {
+const processProperties = (obj: Pojo, previousPaths?: string[]) =>
+  Object.keys(obj).reduce((a, c) => {
     a[c] = recurseProperties(
       (obj as Pojo<string, Pojo>)[c],
       previousPaths ? [...previousPaths, c] : [c],
     );
     return a;
   }, {} as Pojo);
-}
 
 function recurseProperties(currentObj: Pojo | Primitive, previousPaths: string[]) {
   // If is not pojo, return full path of property
@@ -76,3 +76,11 @@ export const getter =
   <S extends Pojo, P extends Path<S>>(obj: S) =>
   (path: P) =>
     path.split('.').reduce((prev, key) => prev[key] as S, obj) as PathValue<S, P>;
+
+export const getDeepPaths = <S extends Pojo>(obj: S) => Object.values(flattenObject(obj, [], []));
+
+export const getDeepValues = <S extends Pojo>(obj: S) =>
+  getDeepPaths(obj).reduce(
+    (accum, current) => [...accum, get(obj, current as Path<S>)],
+    [] as NestedValue<S>[],
+  );

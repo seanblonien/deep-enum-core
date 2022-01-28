@@ -7,14 +7,13 @@
   "module": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && npm run bundle",
-    "bundle": "npx bundlesize2",
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:w": "jest --watch",
     "lint": "eslint --cache --fix --ext .js,.ts --include src .",
-    "size": "node scripts/package-size.js",
-    "dev": "ts-node-dev --respawn -- index.ts"
+    "dev": "nodemon --watch src --exec \"tsc -p tsconfig.build.json\"",
+    "size": "tsc -p tsconfig.size.json && node out/package-size.js"
   },
   "sideEffects": false,
   "files": [
@@ -43,13 +42,13 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "globby": "^13.1.0",
     "jest": "^27.4.7",
+    "nodemon": "^2.0.15",
     "ts-jest": "^27.1.2",
     "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",
-    "typescript": "^4.5.4"
+    "typescript": "^4.5.5"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
     "object-path-immutable": "^4.1.2"
   },
   "engines": {

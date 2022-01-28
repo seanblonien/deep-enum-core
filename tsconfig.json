@@ -19,16 +19,11 @@
         "./src"
       ]
     },
-    "skipLibCheck": true,
-    "removeComments": true
+    "skipLibCheck": true
   },
   "include": [
-    "**/*.ts",
+    "__tests__/*.ts",
+    "src/*.ts",
     ".eslintrc.js"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  }
+  ]
 }
