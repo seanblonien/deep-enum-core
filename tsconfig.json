@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "paths": {
+      "deep-enum": [
+        "./src"
+      ]
+    },
+    "skipLibCheck": true,
+    "removeComments": true
+  },
+  "include": [
+    "**/*.ts",
+    ".eslintrc.js"
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
+}

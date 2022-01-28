@@ -1,0 +1,58 @@
+{
+  "name": "deep-enum",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Sean Blonien",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && npm run bundle",
+    "bundle": "npx bundlesize2",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:w": "jest --watch",
+    "lint": "eslint --cache --fix --ext .js,.ts --include src .",
+    "size": "node scripts/package-size.js",
+    "dev": "ts-node-dev --respawn -- index.ts"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "jest": {
+    "testEnvironment": "jsdom",
+    "preset": "ts-jest/presets/js-with-ts-esm",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "@types/lodash": "^4.14.178",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-sonarjs": "^0.11.0",
+    "eslint-plugin-sort-export-all": "^1.2.1",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "globby": "^13.1.0",
+    "jest": "^27.4.7",
+    "ts-jest": "^27.1.2",
+    "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "object-path-immutable": "^4.1.2"
+  },
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  }
+}
