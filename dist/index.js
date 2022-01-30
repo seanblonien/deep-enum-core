@@ -1,1 +1,0 @@
-export { makePathEnum } from './enum';
