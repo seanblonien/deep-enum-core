@@ -24,6 +24,7 @@
   "include": [
     "__tests__/*.ts",
     "src/*.ts",
-    ".eslintrc.js"
+    "scripts/*.ts",
+    ".eslintrc.cjs"
   ]
 }

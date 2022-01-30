@@ -1,6 +1,15 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable sonarjs/no-duplicate-string */
-import {get, getDeepKeyValues, getDeepPaths, getDeepValues, getter, makeDeepEnumString, makePathEnum, set} from '../src/enum';
+import {
+  get,
+  getDeepKeyValues,
+  getDeepPaths,
+  getDeepValues,
+  getter,
+  makeDeepEnumString,
+  makePathEnum,
+  set,
+} from '../src/enum';
 import {DeepValueOf, DeepKeyOf, IfEquals} from '../src/types';
 
 const cmsIds = {

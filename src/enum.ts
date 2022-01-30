@@ -79,19 +79,19 @@ export const getter =
   (path: P) =>
     path.split('.').reduce((prev, key) => prev[key] as S, obj) as PathValue<S, P>;
 
-export const getDeepPaths = <S extends Pojo>(obj: S) => Object.values(flattenObjectPaths(obj, [], []));
+export const getDeepPaths = <S extends Pojo>(obj: S) =>
+  Object.values(flattenObjectPaths(obj, [], []));
 
 const getDeep = <S extends Pojo>(obj: S, paths: boolean) =>
   getDeepPaths(obj).reduce(
-    (accum, current) => paths ? ({...accum, [current]: get(obj, current as Path<S>)}) : [...accum as NestedValue<S>[], get(obj, current as Path<S>)],
-    (paths ? {} : []),
+    (accum, current) =>
+      paths
+        ? {...accum, [current]: get(obj, current as Path<S>)}
+        : [...(accum as NestedValue<S>[]), get(obj, current as Path<S>)],
+    paths ? {} : [],
   );
 
 export const getDeepKeyValues = <S extends Pojo>(obj: S) =>
   getDeep(obj, true) as Record<DeepKeyOf<S>, DeepValueOf<S>>;
 
-
-export const getDeepValues = <S extends Pojo>(obj: S) =>
-  getDeep(obj, false) as NestedValue<S>[];
-
-export const flatten = getDeepKeyValues;
+export const getDeepValues = <S extends Pojo>(obj: S) => getDeep(obj, false) as NestedValue<S>[];

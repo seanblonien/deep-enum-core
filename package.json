@@ -36,11 +36,12 @@
     "immutable"
   ],
   "scripts": {
+    "prebuild": "npm run typecheck && npm run lint && npm run test",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:w": "jest --watch",
-    "lint": "eslint --cache --fix --ext .",
+    "lint": "eslint --cache --fix --ext .cjs,.ts .",
     "dev": "nodemon --watch src --exec \"tsc -p tsconfig.build.json\"",
     "size": "tsc -p tsconfig.size.json && node out/package-size.js"
   },
@@ -50,9 +51,9 @@
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/lodash": "^4.14.178",
-    "@typescript-eslint/eslint-plugin": "^5.9.1",
-    "@typescript-eslint/parser": "^5.9.1",
-    "eslint": "^8.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
+    "eslint": "^8.8.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.5.0",
