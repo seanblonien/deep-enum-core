@@ -1,5 +1,7 @@
 import {
+  DeepKeyOf,
   DeepPaths,
+  DeepValueOf,
   Initializer,
   NestedValue,
   Path,
@@ -8,7 +10,7 @@ import {
   Primitive,
   ValidateDeepEnumString,
 } from './types';
-import {deepFreeze, flattenObject, getInitializer, isPlainObject} from './utils';
+import {deepFreeze, flattenObjectPaths, getInitializer, isPlainObject} from './utils';
 
 export const makeDeepEnumString = <T extends Pojo>(obj: T) => {
   const result = deepFreeze(obj);
@@ -77,10 +79,18 @@ export const getter =
   (path: P) =>
     path.split('.').reduce((prev, key) => prev[key] as S, obj) as PathValue<S, P>;
 
-export const getDeepPaths = <S extends Pojo>(obj: S) => Object.values(flattenObject(obj, [], []));
+export const getDeepPaths = <S extends Pojo>(obj: S) => Object.values(flattenObjectPaths(obj, [], []));
 
 export const getDeepValues = <S extends Pojo>(obj: S) =>
   getDeepPaths(obj).reduce(
     (accum, current) => [...accum, get(obj, current as Path<S>)],
     [] as NestedValue<S>[],
   );
+
+export const getDeepKeyValues = <S extends Pojo>(obj: S) =>
+  getDeepPaths(obj).reduce(
+    (accum, current) => ({...accum, [current]: get(obj, current as Path<S>)}),
+    {} as Record<DeepKeyOf<S>, DeepValueOf<S>>,
+  );
+
+export const flatten = getDeepKeyValues;

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable sonarjs/no-duplicate-string */
-import {get, getDeepPaths, getDeepValues, getter, makeDeepEnumString, makePathEnum, set} from '../src/enum';
+import {get, getDeepKeyValues, getDeepPaths, getDeepValues, getter, makeDeepEnumString, makePathEnum, set} from '../src/enum';
 import {DeepValueOf, DeepKeyOf, IfEquals} from '../src/types';
 
 const cmsIds = {
@@ -172,5 +172,24 @@ describe('testing enum functions', () => {
     const actualValues = getDeepValues(landmark).sort();
     const expectedValues = [...values].sort();
     expect(actualValues).toEqual(expectedValues);
+  });
+
+  it('should be able to get all of the deeply nested key/value pairs from an object', () => {
+    const keyValues = {
+      name: 'Golden Gate Bridge',
+      'location.type': 'Feature',
+      'location.properties.city': 'San Francisco',
+      'location.properties.isOpen': true,
+      'location.properties.isCold': true,
+      'location.properties.1': 1,
+      'location.geometry.coordinates': [-122.4804438, 37.8199328],
+      'history.opened': null,
+      'history.closed': undefined,
+      'history.length': BigInt(9007199254740991),
+    } as const;
+
+    const actualKeyValues = getDeepKeyValues(landmark);
+    const expectedValues = keyValues;
+    expect(actualKeyValues).toEqual(expectedValues);
   });
 });

@@ -1,24 +1,43 @@
 {
-  "name": "deep-enum",
+  "name": "deep-enum-core",
   "version": "1.0.0",
-  "description": "",
+  "description": "Make deeply nested enums out of any constant object with a full type-safe interface.",
   "author": "Sean Blonien",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git"
+  },
+  "keywords": [
+    "deep",
+    "enum",
+    "enumeration",
+    "path",
+    "constant",
+    "object",
+    "TypeScript",
+    "nested",
+    "json",
+    "deeply",
+    "dot",
+    "notation",
+    "immutable"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:w": "jest --watch",
-    "lint": "eslint --cache --fix --ext .js,.ts --include src .",
+    "lint": "eslint --cache --fix --ext .",
     "dev": "nodemon --watch src --exec \"tsc -p tsconfig.build.json\"",
     "size": "tsc -p tsconfig.size.json && node out/package-size.js"
   },
-  "sideEffects": false,
-  "files": [
-    "dist"
-  ],
   "jest": {
     "testEnvironment": "jsdom",
     "preset": "ts-jest/presets/js-with-ts-esm",

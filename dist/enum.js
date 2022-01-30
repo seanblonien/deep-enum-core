@@ -1,4 +1,4 @@
-import { deepFreeze, flattenObject, getInitializer, isPlainObject } from './utils';
+import { deepFreeze, flattenObjectPaths, getInitializer, isPlainObject } from './utils';
 export const makeDeepEnumString = (obj) => {
     const result = deepFreeze(obj);
     return result;
@@ -40,5 +40,7 @@ function recurseProperties(currentObj, previousPaths) {
 }
 export const makePathEnum = (obj) => deepFreeze(processProperties(obj));
 export const getter = (obj) => (path) => path.split('.').reduce((prev, key) => prev[key], obj);
-export const getDeepPaths = (obj) => Object.values(flattenObject(obj, [], []));
+export const getDeepPaths = (obj) => Object.values(flattenObjectPaths(obj, [], []));
 export const getDeepValues = (obj) => getDeepPaths(obj).reduce((accum, current) => [...accum, get(obj, current)], []);
+export const getDeepKeyValues = (obj) => getDeepPaths(obj).reduce((accum, current) => ({ ...accum, [current]: get(obj, current) }), {});
+export const flatten = getDeepKeyValues;

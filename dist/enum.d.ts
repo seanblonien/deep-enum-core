@@ -1,5 +1,5 @@
-import { DeepPaths, Initializer, Path, PathValue, Pojo } from './types';
-export declare const makeDeepEnumString: <T extends Pojo<string, unknown>>(obj: T) => import("./types").IfEquals<Exclude<PathValue<T, Path<T>>, Record<string, unknown>>, import("./types").DeepKeyOf<T, false>, true, never> extends true ? T : never;
+import { DeepKeyOf, DeepPaths, Initializer, Path, PathValue, Pojo } from './types';
+export declare const makeDeepEnumString: <T extends Pojo<string, unknown>>(obj: T) => import("./types").IfEquals<Exclude<PathValue<T, Path<T>>, Record<string, unknown>>, DeepKeyOf<T, false>, true, never> extends true ? T : never;
 /**
  * Gets the value at a given path in a deeply nested constant object.
  *
@@ -23,3 +23,5 @@ export declare const makePathEnum: <T extends Pojo<string, unknown>>(obj: T) => 
 export declare const getter: <S extends Pojo<string, unknown>, P extends Path<S>>(obj: S) => (path: P) => PathValue<S, P>;
 export declare const getDeepPaths: <S extends Pojo<string, unknown>>(obj: S) => string[];
 export declare const getDeepValues: <S extends Pojo<string, unknown>>(obj: S) => PathValue<S, Path<S>>[];
+export declare const getDeepKeyValues: <S extends Pojo<string, unknown>>(obj: S) => Record<DeepKeyOf<S, false>, Exclude<PathValue<S, Path<S>>, Record<string, unknown>>>;
+export declare const flatten: <S extends Pojo<string, unknown>>(obj: S) => Record<DeepKeyOf<S, false>, Exclude<PathValue<S, Path<S>>, Record<string, unknown>>>;
