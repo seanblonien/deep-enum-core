@@ -1,8 +1,9 @@
 {
   "name": "deep-enum-core",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Make deeply nested enums out of any constant object with a full type-safe interface.",
   "author": "Sean Blonien",
+  "license": "MIT",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "type": "module",
@@ -12,8 +13,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git"
+    "url": "git+https://github.com/seanblonien/deep-enum-core.git"
   },
+  "bugs": {
+    "url": "https://github.com/seanblonien/deep-enum-core/issues"
+  },
+  "homepage": "https://github.com/seanblonien/deep-enum-core#readme",
   "keywords": [
     "deep",
     "enum",
@@ -21,7 +26,8 @@
     "path",
     "constant",
     "object",
-    "TypeScript",
+    "typescript",
+    "type-safe",
     "nested",
     "json",
     "deeply",
@@ -38,12 +44,8 @@
     "dev": "nodemon --watch src --exec \"tsc -p tsconfig.build.json\"",
     "size": "tsc -p tsconfig.size.json && node out/package-size.js"
   },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "preset": "ts-jest/presets/js-with-ts-esm",
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    }
+  "dependencies": {
+    "object-path-immutable": "^4.1.2"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
@@ -67,8 +69,12 @@
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.5"
   },
-  "dependencies": {
-    "object-path-immutable": "^4.1.2"
+  "jest": {
+    "testEnvironment": "jsdom",
+    "preset": "ts-jest/presets/js-with-ts-esm",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
   },
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
