@@ -5,6 +5,6 @@
     "declaration": false,
   },
   "include": [
-    "scripts/package-size.ts",
+    "scripts/benchmark.ts",
   ]
 }

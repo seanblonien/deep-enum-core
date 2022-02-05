@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ESNext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "declaration": true,
     "baseUrl": ".",
@@ -14,12 +14,30 @@
     "allowUnreachableCode": false,
     "noUnusedParameters": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "paths": {
       "deep-enum": [
         "./src"
+      ],
+      "@utils": [
+        "./src/utils.ts"
+      ],
+      "@types": [
+        "./src/types.ts"
+      ],
+      "@core": [
+        "./src/core.ts"
       ]
     },
-    "skipLibCheck": true
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      },
+      {
+        "transform": "typescript-transform-paths",
+        "afterDeclarations": true
+      }
+    ]
   },
   "include": [
     "__tests__/*.ts",

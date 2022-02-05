@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable import/no-extraneous-dependencies */
 import {statSync} from 'fs';
 import {globby} from 'globby';
 

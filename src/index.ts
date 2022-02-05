@@ -1,2 +1,2 @@
-export {makePathEnum} from './enum';
-export type {Pojo, IfEquals} from './types';
+export {createDeepEnum as makePathEnum} from './core';
+export type {Pojo} from '@types';
