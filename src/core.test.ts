@@ -6,9 +6,10 @@ import {
   createGet,
   sealDeepEnum,
   createDeepEnum,
-  set,
   createDeepGet,
   createDeepEnumWithGet,
+  setImmutable,
+  setMutable,
 } from '@core';
 import {DeepValueOf, DeepKeyOf, IfEquals} from '@types';
 
@@ -177,14 +178,14 @@ describe('testing enum functions', () => {
     const landmarkCopy = deepCopy(landmark);
     const landmarkEnum = createDeepEnum(landmarkCopy);
 
-    const newLandmark = set(landmarkCopy, landmarkEnum.location.properties.city, 'Los Angeles');
+    const newLandmark = setImmutable(landmarkCopy, landmarkEnum.location.properties.city, 'Los Angeles');
     expect(get(newLandmark, landmarkEnum.location.properties.city)).toBe('Los Angeles');
   });
   it('should be able to set deeply nested values using the enum mutably', () => {
     const landmarkCopy = deepCopy(landmark);
     const landmarkEnum = createDeepEnum(landmarkCopy);
 
-    set(landmarkCopy, landmarkEnum.location.properties.city, 'Los Angeles', {isMutable: true});
+    setMutable(landmarkCopy, landmarkEnum.location.properties.city, 'Los Angeles');
     expect(get(landmarkCopy, landmarkEnum.location.properties.city)).toBe('Los Angeles');
   });
 

@@ -1,8 +1,10 @@
 import {
   createDeepEnum,
+  createDeepEnumFullMutable,
   createDeepEnumWithGet,
   createDeepGet,
   createGet,
+  createSet,
   getDeepKeyValues,
   getDeepPaths,
   getDeepValues,
@@ -21,7 +23,7 @@ const Animal = {
       Persian: 'hidden Persian value',
     },
   },
-} as const;
+};
 
 describe('tests the exported primitive functions for the library', () => {
   it('should create a deep enum with expected values', () => {
@@ -108,6 +110,49 @@ describe('tests the exported advanced functions for the library', () => {
 
     const actual = get(animalEnum.Mammal.Cat.Persian);
     const expected = 'hidden Persian value';
+
+    expect(actual).toEqual(expected);
+  });
+
+  const deepCopy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
+  it('should create the deep enum and change a value with a setter mutably', () => {
+    const animalCopy = deepCopy(Animal);
+    const animalEnum = createDeepEnum(animalCopy);
+    const set = createSet(animalCopy, {isMutable: true});
+    set(animalEnum.Mammal.Cat.Persian, 'new Persian value mutable');
+
+    const actual = animalCopy.Mammal.Cat.Persian;
+    const expected = 'new Persian value mutable';
+
+    expect(actual).toEqual(expected);
+  });
+  it('should create the deep enum and change a value with a setter immutably', () => {
+    const animalEnum = createDeepEnum(Animal);
+    const set = createSet(Animal);
+    const newAnimalCopy = set(animalEnum.Mammal.Cat.Persian, 'new Persian value immutable');
+
+    const actual = newAnimalCopy.Mammal.Cat.Persian;
+    const expected = 'new Persian value immutable';
+
+    expect(actual).toEqual(expected);
+  });
+  it('should create a full deep enum with its getter and setter', () => {
+    const animalCopy = deepCopy(Animal);
+    const [animalEnum, get, set] = createDeepEnumFullMutable(animalCopy);
+
+    set(animalEnum.Mammal.Cat.Persian, 'new Persian value full');
+    const actual = get(animalEnum.Mammal.Cat.Persian);
+    const expected = 'new Persian value full';
+
+    expect(actual).toEqual(expected);
+  });
+  it('should create a full deep enum with its getter and setter', () => {
+    const animalCopy = deepCopy(Animal);
+    const [animalEnum, get, set] = createDeepEnumFullMutable(animalCopy);
+
+    set(animalEnum.Mammal.Cat.Persian, 'new Persian value full');
+    const actual = get(animalEnum.Mammal.Cat.Persian);
+    const expected = 'new Persian value full';
 
     expect(actual).toEqual(expected);
   });

@@ -1,38 +1,100 @@
-import {createDeepEnum, DeepEnumType} from 'deep-enum-core';
+import {createDeepEnum, createGet, DeepEnumType, get, set, setMutable} from 'deep-enum-core';
 
-const Animal = {
-  Bird: {
-    Parrot: 1,
-    Penguin: 2,
-  },
-  Mammal: {
-    Dog: 3,
-    Cat: 4,
-  },
-};
+describe('testing type-safety of the Animal example in the readme', () => {
+  const Animal = {
+    Bird: {
+      Parrot: 1,
+      Penguin: 2,
+    },
+    Mammal: {
+      Dog: 3,
+      Cat: 4,
+    },
+  };
 
-const AnimalEnum = createDeepEnum(Animal);
-type AnimalType = DeepEnumType<typeof AnimalEnum>;
-function move(animal: AnimalType) {
-  if (animal === AnimalEnum.Bird.Parrot) {
-    return 'Parrot is flying';
+  const AnimalEnum = createDeepEnum(Animal);
+  type AnimalType = DeepEnumType<typeof AnimalEnum>;
+  function move(animal: AnimalType) {
+    if (animal === AnimalEnum.Bird.Parrot) {
+      return 'Parrot is flying';
+    }
+    if (animal === AnimalEnum.Bird.Penguin) {
+      return 'Penguin is waddling';
+    }
+    if (animal === AnimalEnum.Mammal.Dog) {
+      return 'Dog is walking';
+    }
+    if (animal === AnimalEnum.Mammal.Cat) {
+      return 'Cat is pacing';
+    }
+    throw new Error('Unknown animal');
   }
-  if (animal === AnimalEnum.Bird.Penguin) {
-    return 'Penguin is waddling';
-  }
-  if (animal === AnimalEnum.Mammal.Dog) {
-    return 'Dog is walking';
-  }
-  if (animal === AnimalEnum.Mammal.Cat) {
-    return 'Cat is pacing';
-  }
-  throw new Error('Unknown animal');
-}
 
-describe('testing type-safety of examples given in the readme', () => {
   it('should walk the parrot with type-safety', () => {
     const actual = move(AnimalEnum.Bird.Parrot);
     const expected = 'Parrot is flying';
+
+    expect(actual).toBe(expected);
+  });
+});
+
+describe('testing type-safety of the form example in the readmme', () => {
+  type UserForm = {
+    user: {
+      name: string;
+      address: {
+        line1: string;
+        line2?: string;
+      };
+    };
+  };
+  const userForm: UserForm = {
+    user: {
+      name: '',
+      address: {
+        line1: '',
+      },
+    },
+  };
+
+  const USER_FORM_ENUM = createDeepEnum(userForm);
+
+  it('should pass the usage example immutable', () => {
+    // immutable object updates
+    const newUserForm = set(userForm, USER_FORM_ENUM.user.address.line1, '123 Main St immutable');
+
+    const expected = '123 Main St immutable';
+    const actual = get(newUserForm, USER_FORM_ENUM.user.address.line1);
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should pass the usage example mutable', () => {
+    // mutable object updates
+    setMutable(userForm, USER_FORM_ENUM.user.address.line1, '123 Main St mutable');
+
+    const expected = '123 Main St mutable';
+    const actual = get(userForm, USER_FORM_ENUM.user.address.line1);
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should access a nested value that has mutably changed without set', () => {
+    userForm.user.name = 'Jane';
+    const get = createGet(userForm);
+
+    const actual = get(USER_FORM_ENUM.user.name);
+    const expected = 'Jane';
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should access a nested value that has immutably changed without set', () => {
+    const updatedUserFormObject = {...userForm, user: {...userForm.user, name: 'John'}};
+    const get = createGet(updatedUserFormObject);
+
+    const actual = get(USER_FORM_ENUM.user.name);
+    const expected = 'John';
 
     expect(actual).toBe(expected);
   });

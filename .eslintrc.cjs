@@ -54,7 +54,7 @@ module.exports = {
     'object-property-newline': ['error', {allowAllPropertiesOnSameLine: true}],
     'no-unused-vars': 'off', // use typescript rule instead
     'no-useless-constructor': 'off',
-    'no-underscore-dangle': ['warn', {allow: ['_id', '_typecheck']}],
+    'no-underscore-dangle': 'off',
     'no-use-before-define': 'off',
     'no-debugger': 'warn',
     'no-shadow': 'off',
@@ -126,7 +126,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['__tests__/**/*'],
+      files: ['**/*.test.ts'],
       env: {
         jest: true,
       },

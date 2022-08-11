@@ -39,11 +39,13 @@ export const sealDeepEnum = <T extends Pojo>(obj: T, freeze = true) => {
 export const get = <S extends Pojo, P extends Path<S>>(obj: S, path: P) =>
   path.split('.').reduce((prev, key) => prev[key] as S, obj) as PathValue<S, P>;
 
+type SetOptions = {isMutable?: boolean};
+
 const setRecursive = <S extends Pojo>(
   obj: S,
   [prop, ...rest]: string[],
   value: Initializer<unknown>,
-  options: {isMutable?: boolean} = {isMutable: false},
+  options: SetOptions = {isMutable: false},
 ) => {
   const newObj = options.isMutable ? obj : ((Array.isArray(obj) ? [...obj] : {...obj}) as Pojo);
   newObj[prop] = rest.length
@@ -53,19 +55,51 @@ const setRecursive = <S extends Pojo>(
 };
 
 /**
- * Sets a deeply nested property in the given object, immutably by default (but can be mutable).
+ * Sets a deeply nested property in the given object, immutably or mutably
  *
  * @param obj the object whose nested property to change
  * @param path the path used to locate the value to change in this object
- * @param value the new value to be set as the given path
- * @returns a new object with its nested property changed if immutable, or the original object is mutable
+ * @param value the new value to be set at the given path
+ * @returns a new object with its nested property changed if immutable, or the original object if mutable
  */
-export const set = <S extends Pojo, P extends Path<S>>(
+const set_ = <S extends Pojo>(
   obj: S,
-  path: P,
+  path: Path<S>,
   value: Initializer<unknown>,
-  options: {isMutable?: boolean} = {isMutable: false},
+  options: SetOptions,
 ) => setRecursive(obj, path.split('.'), value, options) as S;
+
+/**
+ * Sets a deeply nested property mutably (by changing the property directly) in the given object
+ *
+ * @param obj the object whose nested property to change
+ * @param path the path used to locate the value to change in this object
+ * @param value the new value to be set at the given path
+ * @returns the original object (with its nested property changed)
+ */
+export const setMutable = <S extends Pojo>(obj: S, path: Path<S>, value: Initializer<unknown>) =>
+  set_(obj, path, value, {isMutable: true});
+
+/**
+ * Sets a deeply nested property immutably (by creating a new object), copying all other values of the original object
+ *
+ * @param obj the object whose nested property to change
+ * @param path the path used to locate the value to change in this object
+ * @param value the new value to be set at the given path
+ * @returns a new object with its nested property changed if immutable, or the original object if mutable
+ */
+export const setImmutable = <S extends Pojo>(obj: S, path: Path<S>, value: Initializer<unknown>) =>
+  set_(obj, path, value, {isMutable: false});
+
+/**
+ * Sets a deeply nested property immutably (by creating a new object), copying all other values of the original object
+ *
+ * @param obj the object whose nested property to change
+ * @param path the path used to locate the value to change in this object
+ * @param value the new value to be set at the given path
+ * @returns a new object with its nested property changed if immutable, or the original object if mutable
+ */
+export const set = setImmutable;
 
 const processProperties = (obj: Pojo, previousPaths?: string[]) =>
   Object.keys(obj).reduce((a, c) => {
@@ -83,14 +117,27 @@ function recurseProperties(currentObj: Pojo | Primitive, previousPaths: string[]
   return processProperties(currentObj as Pojo<string, Pojo>, previousPaths);
 }
 
+export const createSet =
+  <S extends Pojo, P extends Path<S>>(obj: S, options: SetOptions = {isMutable: false}) =>
+  <T extends NestedValue<S>>(path: P, value: Initializer<T>) =>
+    set_(obj, path, value, options);
+
+export const createDeepSet =
+  <S extends Pojo, P extends Path<S>>(obj: S, path: P, options: SetOptions = {isMutable: false}) =>
+  <T extends NestedValue<S>>(value: Initializer<T>) =>
+    set_(obj, path, value, options);
+
 /**
- * Generates a deep-enum object from a regular object that can be used as an enum accessor to the original object.
+ * Generates a deep-enum object from a regular object that can be used as an enum accessor to an object with the same
+ * interface.
  *
- * @param obj the object to generate the deep-enum from, must be a plain object
- * @returns the deep-enum object
+ * NOTE: this object ***is immutable, readonly, and can't be changed***, simply because **it is an enum**!
+ *
+ * @param obj the object to generate the deep-enum from, must be a plain object or record or key-value pair object
+ * @returns the deep-enum object which holds the paths that can be used to index into the same interface
  */
 export const createDeepEnum = <T extends Pojo>(obj: T) =>
-  sealDeepEnum(processProperties(obj) as DeepPaths<T>) as DeepPaths<T>;
+  sealDeepEnum(processProperties(obj) as DeepPaths<T>);
 
 /**
  * Creates the equivalent {@link get} function where the object is implicitly used as an argument. Useful if
@@ -130,6 +177,18 @@ export const createDeepEnumWithGet = <T extends Pojo>(obj: T) => {
   const getEnum = createGet(obj);
   return [deepEnum, getEnum] as const;
 };
+
+const createDeepEnumFullInternal = <T extends Pojo>(obj: T, options?: SetOptions) => {
+  const deepEnum = createDeepEnum(obj);
+  const getEnum = createGet(obj);
+  const setEnum = createSet(obj, options);
+  return [deepEnum, getEnum, setEnum] as const;
+};
+
+export const createDeepEnumFull = <T extends Pojo>(obj: T) => createDeepEnumFullInternal(obj);
+
+export const createDeepEnumFullMutable = <T extends Pojo>(obj: T) =>
+  createDeepEnumFullInternal(obj, {isMutable: true});
 
 /**
  * Gets a list of all of the deeply-nested paths in the given object. Flattens the deeply nested values and

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import objP from 'object-path';
 import objPI from 'object-path-immutable';
 import setV from 'set-value';
-import {get, createDeepEnum, set} from '../src/core';
+import {get, createDeepEnum, setImmutable, setMutable} from '../src/core';
 
 const deepConst = {
   a: {
@@ -102,6 +102,7 @@ const deepCopy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
 
 describe('comparing get/set methods to other libraries', () => {
   unit('comparing get methods', log => {
+    // @ts-expect-error - testing a very deeply nested enum
     const pathEnum = createDeepEnum(deepConst);
 
     const deepEnumTime = time(() => {
@@ -140,13 +141,17 @@ describe('comparing get/set methods to other libraries', () => {
 
     const deepEnumTime = time(() => {
       const deepConstCopy = deepCopy(deepConst);
-      const newDeepConstCopy = set(deepConstCopy, pathEnum.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z, 'baz1');
+      const newDeepConstCopy = setImmutable(
+        deepConstCopy,
+        pathEnum.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z,
+        'baz1',
+      );
       const r = newDeepConstCopy.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z as string;
       assert(r === 'baz1');
     });
     const deepEnumMutableTime = time(() => {
       const deepConstCopy = deepCopy(deepConst);
-      set(deepConstCopy, pathEnum.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z, 'baz1', {isMutable: true});
+      setMutable(deepConstCopy, pathEnum.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z, 'baz1');
       const r = deepConstCopy.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z as string;
       assert(r === 'baz1');
     });
