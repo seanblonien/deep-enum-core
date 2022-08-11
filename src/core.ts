@@ -30,10 +30,10 @@ export const sealDeepEnum = <T extends Pojo>(obj: T, freeze = true) => {
  * @param obj the object that contains the value to get
  * @param path the path used to locate the value in this object.
  *
- * The path *MUST* be a valid, dot-separated path string
- * that properly indexes the given object, or else run-time errors will be thrown. If you object the TypeScript
- * interface, errors will be thrown statically that the path is invalid, but all bets are off if you have a bad
- * assertion.
+ * The path *MUST* be a valid, dot-separated path string that properly indexes the given object, or else run-time
+ * errors will be thrown. If you object the TypeScript interface, errors will be thrown statically that the path is
+ * invalid, but all bets are off if you have a bad assertion.
+ *
  * @returns the value stored at that path in object, or `undefined` if the path does not exist in the object
  */
 export const get = <S extends Pojo, P extends Path<S>>(obj: S, path: P) =>
@@ -43,11 +43,11 @@ const setRecursive = <S extends Pojo>(
   obj: S,
   [prop, ...rest]: string[],
   value: Initializer<unknown>,
-  {isMutable}: {isMutable?: boolean} = {isMutable: false},
+  options: {isMutable?: boolean} = {isMutable: false},
 ) => {
-  const newObj = isMutable ? obj : ((Array.isArray(obj) ? [...obj] : {...obj}) as Pojo);
+  const newObj = options.isMutable ? obj : ((Array.isArray(obj) ? [...obj] : {...obj}) as Pojo);
   newObj[prop] = rest.length
-    ? setRecursive(obj[prop] as S, rest, value)
+    ? setRecursive(obj[prop] as S, rest, value, options)
     : getInitializer(value, obj[prop]);
   return newObj;
 };

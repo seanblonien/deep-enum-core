@@ -36,6 +36,10 @@
       {
         "transform": "typescript-transform-paths",
         "afterDeclarations": true
+      },
+      {
+        "transform": "tsc-progress",
+        "title": "Build"
       }
     ]
   },

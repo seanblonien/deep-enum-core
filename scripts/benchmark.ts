@@ -125,11 +125,15 @@ describe('comparing get/set methods to other libraries', () => {
       assert(r === 'foo bar');
     });
 
-    log(chalkTemplate`{black.bgWhite.bold deep-enum get}: ${deepEnumTime}ms`);
-    log(chalkTemplate`{bold lodash get}: ${lodashTime}ms`);
-    log(chalkTemplate`{bold object-path get}: ${objectPathTime}ms`);
-    log(chalkTemplate`{bold object-path-immutable get}: ${objectPathImmutableTime}ms`);
-    log(chalkTemplate`{bold get-path get}: ${getPathTime}ms`);
+    const data = [
+      {label: 'black.bgWhite.bold deep-enum get', time: deepEnumTime},
+      {label: 'bold lodash get', time: lodashTime},
+      {label: 'bold object-path get', time: objectPathTime},
+      {label: 'bold object-path-immutable get', time: objectPathImmutableTime},
+      {label: 'bold get-path get', time: getPathTime},
+    ].sort((a, b) => Number(a.time) - Number(b.time));
+
+    data.forEach(run => log(chalkTemplate`{${run.label}}: ${run.time}ms`));
   });
   unit('comparing set/setter methods', log => {
     const pathEnum = createDeepEnum(deepConst);
@@ -170,11 +174,16 @@ describe('comparing get/set methods to other libraries', () => {
       const r = deepConstCopy.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z as string;
       assert(r === 'baz5');
     });
-    log(chalkTemplate`{black.bgWhite.bold deep-enum set}: ${deepEnumTime}ms`);
-    log(chalkTemplate`{black.bgWhite.bold deep-enum set muttable}: ${deepEnumMutableTime}ms`);
-    log(chalkTemplate`{bold lodash set}: ${lodashTime}ms`);
-    log(chalkTemplate`{bold object-path set}: ${objectPathTime}ms`);
-    log(chalkTemplate`{bold object-path-immutable set}: ${objectPathImmutableTime}ms`);
-    log(chalkTemplate`{bold set-value set}: ${setValueTime}ms`);
+
+    const data = [
+      {label: 'black.bgWhite.bold deep-enum set', time: deepEnumTime},
+      {label: 'black.bgWhite.bold deep-enum set (mutable)', time: deepEnumMutableTime},
+      {label: 'bold lodash set', time: lodashTime},
+      {label: 'bold object-path set', time: objectPathTime},
+      {label: 'bold object-path-immutable set', time: objectPathImmutableTime},
+      {label: 'bold set-value set', time: setValueTime},
+    ].sort((a, b) => Number(a.time) - Number(b.time));
+
+    data.forEach(run => log(chalkTemplate`{${run.label}}: ${run.time}ms`));
   });
 });
