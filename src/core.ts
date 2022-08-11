@@ -142,7 +142,7 @@ export const createDeepEnumWithGet = <T extends Pojo>(obj: T) => {
  * @returns a list of all of the deeply-nested paths in the given object
  */
 export const getDeepPaths = <S extends Pojo>(obj: S) =>
-  Object.values(flattenObjectPaths(obj, [], []));
+  Object.values(flattenObjectPaths(obj, [], [])) as DeepKeyOf<S>[];
 
 // Using all of the deep paths of an object, get the value at each path into an array or object
 const getDeep = <S extends Pojo>(obj: S, type: 'obj' | 'array') =>
@@ -173,4 +173,4 @@ export const getDeepKeyValues = <S extends Pojo>(obj: S) =>
  * @param obj the object to get the deep values of
  * @returns an object where the keys are the full-paths of the deeply-nested values in the given object
  */
-export const getDeepValues = <S extends Pojo>(obj: S) => getDeep(obj, 'array') as NestedValue<S>[];
+export const getDeepValues = <S extends Pojo>(obj: S) => getDeep(obj, 'array') as DeepValueOf<S>[];

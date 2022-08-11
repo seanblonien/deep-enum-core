@@ -16,7 +16,7 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "paths": {
-      "deep-enum": [
+      "deep-enum-core": [
         "./src"
       ],
       "@utils": [

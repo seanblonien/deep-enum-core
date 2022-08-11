@@ -45,7 +45,7 @@
     "test:ci": "run-p typecheck lint test",
     "test:w": "jest --watch",
     "lint": "eslint --cache --fix --ext .cjs,.ts .",
-    "dev": "nodemon --watch src --exec \"run-s build\"",
+    "dev": "npm run build -- -w",
     "benchmark": "tsc -p tsconfig.benchmark.json && node --experimental-specifier-resolution=node out/scripts/benchmark",
     "size": "tsc -p tsconfig.size.json && node out/package-size"
   },
@@ -91,7 +91,11 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "jest": {
-    "preset": "ts-jest/presets/js-with-ts-esm"
+    "preset": "ts-jest/presets/js-with-ts-esm",
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(test).ts"
+    ]
   },
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
