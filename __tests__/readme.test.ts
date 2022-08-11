@@ -3,12 +3,12 @@ import {createDeepEnum, createGet, DeepEnumType, get, set, setMutable} from 'dee
 describe('testing type-safety of the Animal example in the readme', () => {
   const Animal = {
     Bird: {
-      Parrot: 1,
-      Penguin: 2,
+      Parrot: 0,
+      Penguin: 0,
     },
     Mammal: {
-      Dog: 3,
-      Cat: 4,
+      Dog: 0,
+      Cat: 0,
     },
   };
 
@@ -31,10 +31,15 @@ describe('testing type-safety of the Animal example in the readme', () => {
   }
 
   it('should walk the parrot with type-safety', () => {
-    const actual = move(AnimalEnum.Bird.Parrot);
-    const expected = 'Parrot is flying';
+    const actual = move(AnimalEnum.Mammal.Dog);
+    const expected = 'Dog is walking';
 
     expect(actual).toBe(expected);
+  });
+
+  it('should throw a TS error and run-time error on the function', () => {
+    // @ts-expect-error testing this throws an invalid property access error
+    expect(() => move(0)).toThrow();
   });
 });
 
