@@ -11,7 +11,7 @@
 - [Benchmarks](#benchmarks)
 - [Related Projects](#related-projects)
 
-## Install
+## Installation
 
 ```sh
 npm install deep-enum-core
@@ -23,9 +23,44 @@ There are two primary use cases for this library:
 
 ### **Deep Enum Constants**
 
-A deep-enum constant is a constant, readonly object that is used to semantically group constants together in a nested fashion (like a regular `enum`, but nested). The main use case for this is for re-use of these constants and for type-safety.
+A deep-enum constant is a constant, readonly object that is used to semantically group constants together in a nested fashion (like a regular `enum`, but nested). The main use case for this is, like with normal enums, re-use and type-safety.
 
-Here is an example of creating a deep-enum constant for type-safety only, **ignoring the enum values**:
+Here is an example of creating a deep-enum constant for storing specifc values (i.e. the value of the enum needs to be a specific string or number):
+
+```ts
+// (excluding import statements)
+// DirectionsEnum.ts
+export const DirectionsEnum = deepEnumConstant({
+  Cardinal: {
+    N: 'north',
+    E: 'east',
+    S: 'south',
+    W: 'west',
+  },
+  Ordinal: {
+    NE: 'northeast',
+    SW: 'southwest',
+    SE: 'southeast',
+    NW: 'northwest',
+  },
+} as const);
+
+export type DirectionsType = DeepEnumConstantType<typeof DirectionsEnum>;
+
+// move.ts
+function move(direction: DirectionsType) {
+    return `You are now moving ${direction}`;
+}
+
+// move-usage.ts
+move(DirectionsEnum.Cardinal.N);  // ✅ You are now moving north
+move(DirectionsEnum.Cardinal.SE); // ✅ You are now moving southeast
+move('invalid');                  // ❌ Argument of type '"invalid"' is not assignable to parameter of type '"north" | "east" | "south" | "west" | "northeast" | "southwest" | "southeast" | "northwest"'.
+```
+
+**NOTE:** the object *must* have the `const` keyword to indicate that the property values are string literals and not just strings.
+
+But sometimes, you don't really need to store a specific value for an enum, you just want the type-safety and explicit nature of the enum. In these cases, you can create a deep-enum constant that **ignores the enum values**, like so:
 
 ```ts
 // AnimalEnum.ts
@@ -39,6 +74,7 @@ const Animal = {
     Cat: 0,
   },
 };
+
 // NOTE: the values are "ignored" and "don't matter" in this use-case (by choice) because the enum object
 // generates new values to represent each constant. If you *just want type-safety* for deeply nested enum constants, 
 // you shouldn't have to worry about the values. See the next section if you do care about the values.
@@ -58,6 +94,8 @@ move(0);                      // ❌ Argument of type '0' is not assignable to p
 ```
 
 Here is an example of creating a deep-enum constant for type-safety and for using specific values for each constant:
+
+TODO: show code example of using enum `as const`
 
 ### **Deep Enum Interface**
 

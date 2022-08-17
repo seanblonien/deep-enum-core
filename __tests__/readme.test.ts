@@ -1,4 +1,44 @@
-import {createDeepEnum, createGet, DeepEnumType, get, set, setMutable} from 'deep-enum-core';
+import {createDeepEnum, createGet, deepEnumConstant, DeepEnumConstantType, get, set, setMutable} from 'deep-enum-core';
+
+describe('testing creation of a deep enum constant', () => {
+  const DirectionsEnum = deepEnumConstant({
+    Cardinal: {
+      N: 'north',
+      E: 'east',
+      S: 'south',
+      W: 'west',
+    },
+    Ordinal: {
+      NE: 'northeast',
+      SW: 'southwest',
+      SE: 'southeast',
+      NW: 'northwest',
+    },
+  } as const);
+  type DirectionsType = DeepEnumConstantType<typeof DirectionsEnum>;
+  function move(direction: DirectionsType) {
+    return `You are now moving ${direction}`;
+  }
+
+  it('should walk north with type-safety', () => {
+    const actual = move(DirectionsEnum.Cardinal.N);
+    const expected = 'You are now moving north';
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should walk southeast with type-safety', () => {
+    const actual = move(DirectionsEnum.Ordinal.SE);
+    const expected = 'You are now moving southeast';
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should throw a TS error on the function', () => {
+    // @ts-expect-error testing this throws an invalid property access error
+    move('invalid');
+  });
+});
 
 describe('testing type-safety of the Animal example in the readme', () => {
   const Animal = {
@@ -13,7 +53,7 @@ describe('testing type-safety of the Animal example in the readme', () => {
   };
 
   const AnimalEnum = createDeepEnum(Animal);
-  type AnimalType = DeepEnumType<typeof AnimalEnum>;
+  type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
   function move(animal: AnimalType) {
     if (animal === AnimalEnum.Bird.Parrot) {
       return 'Parrot is flying';

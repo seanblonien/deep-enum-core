@@ -1,4 +1,5 @@
 export {
+  deepEnumConstant,
   createDeepEnum,
   createGet,
   createDeepGet,
@@ -15,4 +16,4 @@ export {
   getDeepValues,
   getDeepKeyValues,
 } from './core';
-export type {Pojo, DeepKeyOf as DeepEnumType, DeepValueOf as DeepEnumValueType} from '@types';
+export type {Pojo, DeepKeyOf as DeepEnumType, DeepValueOf as DeepEnumConstantType} from '@types';

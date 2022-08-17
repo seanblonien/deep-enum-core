@@ -139,6 +139,7 @@ export const createDeepSet =
 export const createDeepEnum = <T extends Pojo>(obj: T) =>
   sealDeepEnum(processProperties(obj) as DeepPaths<T>);
 
+export const deepEnumConstant = <T extends Pojo>(obj: T) => sealDeepEnum(obj);
 /**
  * Creates the equivalent {@link get} function where the object is implicitly used as an argument. Useful if
  * you are doing multiple gets on the same object in various places.
