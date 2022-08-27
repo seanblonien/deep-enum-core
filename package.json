@@ -103,6 +103,9 @@
     "testMatch": [
       "**/__tests__/**/*.ts",
       "**/?(*.)+(test).ts"
+    ],
+    "coverageReporters": [
+      "text"
     ]
   },
   "engines": {
