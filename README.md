@@ -1,4 +1,4 @@
-# deep-enum-core [![NPM version](https://img.shields.io/npm/v/deep-enum-core?style=flat)](https://www.npmjs.com/package/deep-enum-core) [![NPM monthly downloads](https://img.shields.io/npm/dm/deep-enum-core?style=flat)](](https://www.npmjs.com/package/deep-enum-core)) [![Tests](https://github.com/seanblonien/deep-enum-core/actions/workflows/main.yml/badge.svg)](https://github.com/seanblonien/deep-enum-core/actions/workflows/main.yml) [![License](https://img.shields.io:/npm/l/deep-enum-core)]()
+# deep-enum-core [![NPM version](https://img.shields.io/npm/v/deep-enum-core?style=flat)](https://www.npmjs.com/package/deep-enum-core) [![NPM monthly downloads](https://img.shields.io/npm/dm/deep-enum-core?style=flat)](](https://www.npmjs.com/package/deep-enum-core)) [![coverage](https://codecov.io/gh/seanblonien/deep-enum-core/branch/main/graph/badge.svg?token=LVQ9Y5H2WH)](https://codecov.io/gh/seanblonien/deep-enum-core) [![License](https://img.shields.io:/npm/l/deep-enum-core)]()
 
 > Make a deeply nested enum of constant values that provides type-safety for those constants
 
