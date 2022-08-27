@@ -42,8 +42,7 @@
     "clean": "rimraf dist out",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:ci": "run-p typecheck lint test:coverage",
+    "test:ci": "cross-env CI=true run-p typecheck lint test",
     "test:w": "jest --watch",
     "lint": "eslint --cache --fix --ext .cjs,.ts .",
     "dev": "npm run build -- -w",
@@ -104,8 +103,10 @@
       "**/__tests__/**/*.ts",
       "**/?(*.)+(test).ts"
     ],
+    "collectCoverage": true,
     "coverageReporters": [
-      "text"
+      "text",
+      "cobertura"
     ]
   },
   "engines": {
