@@ -9,6 +9,8 @@ import {
   Pojo,
   Primitive,
   ValidateDeepEnumString,
+  Mutable,
+  ToPrimitive,
 } from '@types';
 import {deepFreeze, flattenObjectPaths, getInitializer, isPlainObject} from '@utils';
 
@@ -19,9 +21,16 @@ import {deepFreeze, flattenObjectPaths, getInitializer, isPlainObject} from '@ut
  * @param freeze whether or not to make the deep-enum returned readonly (deeply froezen), defaults to `true`
  * @returns the deep-enum object with validated type, or `never` if invalid
  */
-export const sealDeepEnum = <T extends Pojo>(obj: T, freeze = true) => {
+export const sealDeepEnum = <T extends Pojo, B extends true | false>(
+  obj: T,
+  freeze = true as B,
+) => {
   const result = freeze ? deepFreeze(obj) : obj;
-  return result as ValidateDeepEnumString<T> extends true ? typeof result : never;
+  return result as ValidateDeepEnumString<T> extends true
+    ? B extends true
+      ? typeof result
+      : Mutable<typeof result>
+    : never;
 };
 
 /**
@@ -40,13 +49,13 @@ export const get = <S extends Pojo, P extends Path<S>>(obj: S, path: P) =>
 
 type SetOptions = {isMutable?: boolean};
 
-const setRecursive = <S extends Pojo>(
+const setRecursive = <S extends Pojo, P extends Path<S>>(
   obj: S,
   [prop, ...rest]: string[],
-  value: Initializer<unknown>,
-  options: SetOptions = {isMutable: false},
+  value: Initializer<ToPrimitive<PathValue<S, P>>>,
+  options: SetOptions,
 ) => {
-  const newObj = options.isMutable ? obj : ((Array.isArray(obj) ? [...obj] : {...obj}) as Pojo);
+  const newObj = options.isMutable ? obj : ({...obj} as Pojo);
   newObj[prop] = rest.length
     ? setRecursive(obj[prop] as S, rest, value, options)
     : getInitializer(value, obj[prop]);
@@ -62,10 +71,10 @@ const setRecursive = <S extends Pojo>(
  * @param options configurations that change how the value is set
  * @returns a new object with its nested property changed if immutable, or the original object if mutable
  */
-const set_ = <S extends Pojo>(
+const set_ = <S extends Pojo, P extends Path<S>>(
   obj: S,
-  path: Path<S>,
-  value: Initializer<unknown>,
+  path: P,
+  value: Initializer<ToPrimitive<PathValue<S, P>>>,
   options: SetOptions,
 ) => setRecursive(obj, path.split('.'), value, options) as S;
 
@@ -77,8 +86,11 @@ const set_ = <S extends Pojo>(
  * @param value the new value to be set at the given path
  * @returns the original object (with its nested property changed)
  */
-export const setMutable = <S extends Pojo>(obj: S, path: Path<S>, value: Initializer<unknown>) =>
-  set_(obj, path, value, {isMutable: true});
+export const setMutable = <S extends Pojo, P extends Path<S>>(
+  obj: S,
+  path: P,
+  value: Initializer<ToPrimitive<PathValue<S, P>>>,
+) => set_(obj, path, value, {isMutable: true});
 
 /**
  * Sets a deeply nested property immutably (by creating a new object), copying all other values of the original object
@@ -88,8 +100,11 @@ export const setMutable = <S extends Pojo>(obj: S, path: Path<S>, value: Initial
  * @param value the new value to be set at the given path
  * @returns a new object with its nested property changed if immutable, or the original object if mutable
  */
-export const setImmutable = <S extends Pojo>(obj: S, path: Path<S>, value: Initializer<unknown>) =>
-  set_(obj, path, value, {isMutable: false});
+export const setImmutable = <S extends Pojo, P extends Path<S>>(
+  obj: S,
+  path: P,
+  value: Initializer<ToPrimitive<PathValue<S, P>>>,
+) => set_(obj, path, value, {isMutable: false});
 
 /**
  * Sets a deeply nested property immutably (by creating a new object), copying all other values of the original object
@@ -105,7 +120,7 @@ const processProperties = (obj: Pojo, previousPaths: string[], postfixIdentifier
   Object.keys(obj).reduce((a, c) => {
     a[c] = recurseProperties(
       (obj as Pojo<string, Pojo>)[c],
-      previousPaths ? [...previousPaths, c] : [c],
+      [...previousPaths, c],
       postfixIdentifier,
     );
     return a;
@@ -130,8 +145,8 @@ function recurseProperties(
  * @returns a function that takes a path and and value to change set that value at that given path in the object
  */
 export const createSet =
-  <S extends Pojo, P extends Path<S>>(obj: S, options: SetOptions = {isMutable: false}) =>
-  <T extends NestedValue<S>>(path: P, value: Initializer<T>) =>
+  <S extends Pojo>(obj: S, options: SetOptions = {isMutable: false}) =>
+  <P extends Path<S>>(path: P, value: Initializer<ToPrimitive<PathValue<S, P>>>) =>
     set_(obj, path, value, options);
 
 /**
@@ -144,7 +159,7 @@ export const createSet =
  */
 export const createDeepSet =
   <S extends Pojo, P extends Path<S>>(obj: S, path: P, options: SetOptions = {isMutable: false}) =>
-  <T extends NestedValue<S>>(value: Initializer<T>) =>
+  (value: Initializer<ToPrimitive<PathValue<S, P>>>) =>
     set_(obj, path, value, options);
 
 /**

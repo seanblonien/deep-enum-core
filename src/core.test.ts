@@ -44,6 +44,19 @@ const landmark = {
       coordinates: [-122.4804438, 37.8199328],
     },
   },
+  // TODO: support static arrays of data
+  // weatherData: [
+  //   {
+  //     highTemp: '70F',
+  //     low: '56F',
+  //     day: '01/01/1990',
+  //   },
+  //   {
+  //     highTemp: '65F',
+  //     low: '57F',
+  //     day: '01/02/1990',
+  //   },
+  // ] as const,
   history: {
     opened: null,
     closed: undefined,
@@ -82,6 +95,10 @@ describe('testing enum functions', () => {
     const deepEnum2 = createDeepEnum(cmsIds);
 
     expect(deepEnum1).toEqual(deepEnum2);
+  });
+  it('should allow modification if disabled the freezing of a deep enum object', () => {
+    const deepEnum = sealDeepEnum(deepCopy(cmsIds), false);
+    deepEnum.page1.title = 'page1.title';
   });
   it('should convert an object with arbitrary values to an deep-enum object', () => {
     const landmarkEnum = createDeepEnum(landmark);
@@ -175,11 +192,18 @@ describe('testing enum functions', () => {
     expect(() => get(obj, deepEnum.a.b.c.d)).toThrow();
   });
   it('should be able to set deeply nested values using the enum immutably', () => {
+    const landmarkEnum = createDeepEnum(landmark);
+
+    const newLandmark = setImmutable(landmark, landmarkEnum.location.properties.city, 'Los Angeles');
+    expect(get(newLandmark, landmarkEnum.location.properties.city)).toBe('Los Angeles');
+    expect(get(landmark, landmarkEnum.location.properties.city)).toBe('San Francisco');
+  });
+  it('should be able to set deeply nested values using the enum immutably via changing previous value', () => {
     const landmarkCopy = deepCopy(landmark);
     const landmarkEnum = createDeepEnum(landmarkCopy);
 
-    const newLandmark = setImmutable(landmarkCopy, landmarkEnum.location.properties.city, 'Los Angeles');
-    expect(get(newLandmark, landmarkEnum.location.properties.city)).toBe('Los Angeles');
+    const newLandmark = setImmutable(landmarkCopy, landmarkEnum.location.properties['1'], p => p + 1);
+    expect(get(newLandmark, landmarkEnum.location.properties['1'])).toBe(2);
   });
   it('should be able to set deeply nested values using the enum mutably', () => {
     const landmarkCopy = deepCopy(landmark);

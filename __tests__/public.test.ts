@@ -3,11 +3,14 @@ import {
   createDeepEnumFullMutable,
   createDeepEnumWithGet,
   createDeepGet,
+  createDeepSet,
   createGet,
   createSet,
+  get,
   getDeepKeyValues,
   getDeepPaths,
   getDeepValues,
+  setImmutable,
 } from 'deep-enum-core';
 
 const Animal = {
@@ -155,5 +158,34 @@ describe('tests the exported advanced functions for the library', () => {
     const expected = 'new Persian value full';
 
     expect(actual).toEqual(expected);
+  });
+  it('should create an immutable deep setter for the given object', () => {
+    const animalCopy = deepCopy(Animal);
+    const animalEnum = createDeepEnum(animalCopy);
+    const set = createDeepSet(animalCopy, animalEnum.Mammal.Cat.Persian);
+
+    const newAnimalCopy = set('new Persian value');
+    const actual = newAnimalCopy.Mammal.Cat.Persian;
+    const expected = 'new Persian value';
+
+    expect(actual).toEqual(expected);
+  });
+  it('should create a mutable deep setter for the given object', () => {
+    const animalCopy = deepCopy(Animal);
+    const animalEnum = createDeepEnum(animalCopy);
+    const set = createDeepSet(animalCopy, animalEnum.Mammal.Cat.Persian, {isMutable: true});
+
+    set('new Persian value');
+    const actual = animalCopy.Mammal.Cat.Persian;
+    const expected = 'new Persian value';
+
+    expect(actual).toEqual(expected);
+  });
+  it('should set a value in an object immutably', () => {
+    const animalEnum = createDeepEnum(Animal);
+
+    const newAnimal = setImmutable(Animal, animalEnum.Mammal.Cat.Persian, 'new Persian value');
+    expect(get(newAnimal, animalEnum.Mammal.Cat.Persian)).toBe('new Persian value');
+    expect(get(Animal, animalEnum.Mammal.Cat.Persian)).toBe('hidden Persian value');
   });
 });

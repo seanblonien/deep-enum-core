@@ -49,11 +49,7 @@ export const getInitializer = <T>(value: Initializer<T>, previousValue: T) =>
  * @param accumulator the array parts of the path to accumulate
  * @returns an array of paths of the object
  */
-export const flattenObjectPaths = (
-  obj: Pojo,
-  previousPaths: string[] = [],
-  accumulator: string[] = [],
-) => {
+export const flattenObjectPaths = (obj: Pojo, previousPaths: string[], accumulator: string[]) => {
   Object.keys(obj).forEach(key => {
     const value = obj[key];
     if (isPlainObject(value)) {

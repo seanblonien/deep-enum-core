@@ -122,3 +122,21 @@ export type Initializer<T> = T | InitializerUpdate<T>;
 //   path: P,
 //   value: Initializer<NestedValue<S>>,
 // ) => S;
+
+/**
+ * Converts a readonly object into a mutable object
+ */
+export type Mutable<T> = {
+  -readonly [Key in keyof T]: Mutable<T[Key]>;
+};
+
+/**
+ * Converts a literal type to its more general, primitive type. This purposely does type widening.
+ */
+export type ToPrimitive<T> = T extends string
+  ? string
+  : T extends number
+  ? number
+  : T extends boolean
+  ? boolean
+  : T;
