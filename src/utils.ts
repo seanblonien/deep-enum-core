@@ -43,6 +43,11 @@ export const getInitializer = <T>(value: Initializer<T>, previousValue: T) =>
  * Returns:
  *
  *   `[ 'a', 'b.c' ]`
+ *
+ * @param obj the object to flatten
+ * @param previousPaths the array of previous paths to concatenate to
+ * @param accumulator the array parts of the path to accumulate
+ * @returns an array of paths of the object
  */
 export const flattenObjectPaths = (
   obj: Pojo,

@@ -23,7 +23,14 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  plugins: ['import', 'unused-imports', '@typescript-eslint', 'sort-export-all', 'sonarjs'],
+  plugins: [
+    'import',
+    'unused-imports',
+    '@typescript-eslint',
+    'sort-export-all',
+    'sonarjs',
+    'jsdoc',
+  ],
   extends: [
     'airbnb-base',
     'plugin:import/errors',
@@ -33,9 +40,11 @@ module.exports = {
     'plugin:sort-export-all/recommended',
     'plugin:sonarjs/recommended',
     'plugin:prettier/recommended',
+    'plugin:jsdoc/recommended',
   ],
   ignorePatterns: ['node_modules', 'dist'],
   settings: {
+    jsdoc: {mode: 'typescript'},
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
@@ -123,6 +132,12 @@ module.exports = {
       'warn',
       {vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_'},
     ],
+    // jsdoc
+    'jsdoc/require-param-type': 'off',
+    'jsdoc/require-param': ['warn', {enableRestElementFixer: false, checkDestructured: false}],
+    'jsdoc/check-param-names': ['warn', {checkDestructured: false}],
+    'jsdoc/require-returns-type': 'off',
+    'jsdoc/require-jsdoc': ['warn', {publicOnly: true, require: {ArrowFunctionExpression: true}}],
   },
   overrides: [
     {

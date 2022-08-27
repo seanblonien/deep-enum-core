@@ -23,7 +23,7 @@ There are two primary use cases for this library:
 
 ### **Deep Enum Constants**
 
-A deep-enum constant is a constant, readonly object that is used to semantically group constants together in a nested fashion (like a regular `enum`, but nested). The main use case for this is, like with normal enums, re-use and type-safety.
+A deep-enum constant is a constant, readonly object that is used to semantically group constants together in a nested fashion (like a regular `enum`, but nested). The main use case for this is, like with normal enums, 1) re-use and 2) type-safety.
 
 Here is an example of creating a deep-enum constant for storing specifc values (i.e. the value of the enum needs to be a specific string or number):
 
@@ -58,7 +58,7 @@ move(DirectionsEnum.Cardinal.SE); // ✅ You are now moving southeast
 move('invalid');                  // ❌ Argument of type '"invalid"' is not assignable to parameter of type '"north" | "east" | "south" | "west" | "northeast" | "southwest" | "southeast" | "northwest"'.
 ```
 
-**NOTE:** the object *must* have the `const` keyword to indicate that the property values are string literals and not just strings.
+**NOTE:** the object *must* have the TypeScript `const` keyword to indicate that the property values are string literals and not just strings ([read more why in TS docs](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-inference)).
 
 But sometimes, you don't really need to store a specific value for an enum, you just want the type-safety and explicit nature of the enum. In these cases, you can create a deep-enum constant that **ignores the enum values**, like so:
 

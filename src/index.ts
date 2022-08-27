@@ -6,7 +6,6 @@ export {
   createDeepEnumWithGet,
   createSet,
   createDeepSet,
-  createDeepEnumFull,
   createDeepEnumFullMutable,
   setMutable,
   setImmutable,
