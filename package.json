@@ -50,22 +50,22 @@
     "size": "tsc -p tsconfig.size.json && node out/package-size"
   },
   "devDependencies": {
-    "@types/get-value": "^3.0.2",
-    "@types/inquirer": "^9.0.0",
-    "@types/jest": "^28.1.6",
+    "@types/get-value": "^3.0.3",
+    "@types/inquirer": "^9.0.1",
+    "@types/jest": "^28.1.8",
     "@types/jsdom": "^20.0.0",
-    "@types/lodash": "^4.14.182",
+    "@types/lodash": "^4.14.184",
     "@types/object-path": "^0.11.1",
     "@types/set-value": "^4.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.33.0",
-    "@typescript-eslint/parser": "^5.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/parser": "^5.35.1",
     "chalk": "^5.0.1",
     "chalk-template": "^0.4.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.22.0",
+    "eslint": "^8.23.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-import-resolver-typescript": "^3.4.0",
+    "eslint-import-resolver-typescript": "^3.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsdoc": "^39.3.6",
     "eslint-plugin-prettier": "^4.2.1",
@@ -85,14 +85,19 @@
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
     "set-value": "^4.1.0",
-    "ts-jest": "^28.0.7",
+    "ts-jest": "^28.0.8",
     "ts-patch": "^2.0.2",
     "tsc-progress": "^1.0.4",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.2",
     "typescript-transform-paths": "^3.3.1"
   },
   "jest": {
     "preset": "ts-jest/presets/js-with-ts-esm",
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.json"
+      }
+    },
     "testMatch": [
       "**/__tests__/**/*.ts",
       "**/?(*.)+(test).ts"
