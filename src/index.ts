@@ -1,6 +1,6 @@
 export {
   deepEnumConstant,
-  createDeepEnum,
+  createDeepEnumInterface,
   createGet,
   createDeepGet,
   createDeepEnumWithGet,

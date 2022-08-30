@@ -21,7 +21,7 @@ npm install deep-enum-core
 
 There are two primary use cases for this library:
 
-### **Deep Enum Constants**
+### **Deep-Enum Constants**
 
 A deep-enum constant is a constant, readonly object that is used to semantically group constants together in a nested fashion (like a regular `enum`, but nested). The main use case for this is, like with normal enums, 1) re-use and 2) type-safety.
 
@@ -77,27 +77,25 @@ const Animal = {
 
 // NOTE: the values are "ignored" and "don't matter" in this use-case (by choice) because the enum object
 // generates new values to represent each constant. If you *just want type-safety* for deeply nested enum constants, 
-// you shouldn't have to worry about the values. See the next section if you do care about the values.
-export const AnimalEnum = createDeepEnum(Animal);
+// you shouldn't have to worry about the values. See the previous section if you do care about the values.
+export const AnimalEnum = createDeepEnumInterface(Animal);
 export type AnimalType = DeepEnumType<typeof AnimalEnum>;
 
 // move.ts
 function move(animal: AnimalType) {
-  if (animal === AnimalEnum.Bird.Parrot) {
+  if (animal === AnimalEnum.Mammal.Dog) {
     // ...
   }
 }
 
 // move-usage.ts
-move(AnimalEnum.Bird.Parrot); // ✅
+move(AnimalEnum.Mammal.Dog); // ✅
 move(0);                      // ❌ Argument of type '0' is not assignable to parameter of type '"Bird.Parrot" | "Bird.Penguin" | "Mammal.Dog" | "Mammal.Cat"'
 ```
 
-Here is an example of creating a deep-enum constant for type-safety and for using specific values for each constant:
+See the [API section](#api) for more details on how the interfaces work.
 
-TODO: show code example of using enum `as const`
-
-### **Deep Enum Interface**
+### **Deep-Enum Interface**
 
 A deep-enum interface will allow you to get/set (read/write) to deeply nested properties of that object using the enum as the interface (abstract from the object that is being changed). All you need is the deep-enum interface to specify which property/path you want to update on a given object of that same interface.
 
@@ -123,7 +121,7 @@ const userForm: UserForm = {
 };
 
 // create a deep-enum object that can be used to type-safely reference paths of the above object
-const USER_FORM_ENUM = createDeepEnum(userForm);
+const USER_FORM_ENUM = createDeepEnumInterface(userForm);
 
 // immutable object updates
 const newUserForm = set(userForm, USER_FORM_ENUM.user.address.line1, '123 Main St immutable');
@@ -135,7 +133,7 @@ get(userForm, USER_FORM_ENUM.user.address.line1); // '123 Main St mutable'
 
 ```
 
-Continue onto the [API](#API) to see the full list of the helper functions you can use to avoid some of this boiler plate and get re-use when doing get/set on an object using a deep-enum.
+Continue onto the [API](#api) to see the full list of the helper functions you can use to avoid some of this boiler plate and get re-use when doing get/set on an object using a deep-enum.
 
 ## API
 
@@ -146,21 +144,24 @@ Terms:
 - **deep-enum**: like an enum, but the constants are nested
 - **path** or **property**: a set of object keys that uniquely define a value (either another object or primitive value) within an object
   - e.g., `const obj = {a: {b: {c: 'value'}}};` has 3 paths/properties: `'a'`, `'a.b'`, and `'a.b.c'`
-- **deep enum path**: a path where the value is a primitive (not an object)
-  - e.g., `const obj = {a: {b: {c: 'value'}}};` has 1 deep enum path `'a.b.c'`
-- **deep enum value**: a deep enum path's value
+- **deep-enum path**: a path where the value is a primitive (not an object)
+  - e.g., `const obj = {a: {b: {c: 'value'}}};` has 1 deep-enum path `'a.b.c'`
+- **deep-enum value**: a deep-enum path's value
   - e.g., `const obj = {a: {b: {c: 'value'}}};` has 1 leaf value: `'value'`
 
-### createDeepEnum
+### createDeepEnumInterface(obj, postfixIdentifier)
 
-```ts
-const MY_ENUM = createDeepEnum(obj);
-```
-
-- Generates a deep-enum object from a regular object that can be used as an enum accessor to an object with the same interface.
+- Generates a deep-enum interface object from a regular object that can be used as an enum accessor to an object with the same interface.
 - NOTE: this object ***is immutable, readonly, and can't be changed***, simply because **it is an enum**!
 - **Params**
   - `obj`: the object to generate the deep-enum from, must be a plain object or record or key-value pair object
+  - `postfixIdentifier` (optional): the value to append to the end of a path when generating the enum values
+    - Use this to detect if you are properly using the deep enum object interface and not hard-coding the string literals anywhere, e.g.
+
+    ```ts
+    
+    ```
+
 - **Returns**
   - the deep-enum object which holds the paths that can be used to index into the same interface
 
@@ -189,9 +190,9 @@ This is a great interface because we can access the semantically meaningful cons
 
 ...but, *what if your constants are hierarchical or deeply nested?*
 
-### Deep Enums
+### Deep-Enums
 
-A **deep enum** is an object that defines constants in a semantically meaningful way that provides type-safety, like a regular TypeScript enum, while *also allowing said constants to be deeply nested*, which is something you **cannot** do with a regular TypeScript enum.
+A **deep-enum** is an object that defines constants in a semantically meaningful way that provides type-safety, like a regular TypeScript enum, while *also allowing said constants to be deeply nested*, which is something you **cannot** do with a regular TypeScript enum.
 
 In an *ideal world*, if this was native to TypeScript, it could look something like this:
 
@@ -208,7 +209,7 @@ enum Animal {
 }
 ```
 
-However, since this is not the case, we have to use standard TypeScript object interfaces to define a deep enum like this one:
+However, since this is not the case, we have to use standard TypeScript object interfaces to define a deep-enum like this one:
 
 ```ts
 const Animal = {
@@ -238,11 +239,11 @@ const Animal = {
 
 Obviously this is less-than-ideal than the standard enum interface where values are implicitly defined, but because we are defining a static object literal, we *must* specify the property values of each enum value, making it much more verbose. We know the whole point of an enum is that the values should not matter, they just need to be internally unique. But, we need to assign the properties to something just because we need to create a valid object literal.
 
-With standard enums, the object was flat, so you could always access every enum property simply using the dot or property accessor operator. And deep enums are no different, we can still simply do `Animal.Bird.Parrot` and get an enum value.
+With standard enums, the object was flat, so you could always access every enum property simply using the dot or property accessor operator. And deep-enums are no different, we can still simply do `Animal.Bird.Parrot` and get an enum value.
 
 Now that we have an object, how do we actually use it to enforce type-safety?
 
-All we need to do is derive a few TypeScript helper interfaces and some helper functions and we can realize the full power of deep enums.
+All we need to do is derive a few TypeScript helper interfaces and some helper functions and we can realize the full power of deep-enums.
 
 ### Deriving Type-Safe Interfaces
 
@@ -276,7 +277,7 @@ This works. But clearly, the second you start adding more to your enum, you have
 
 Luckily, since [TypeScript 4.1](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1-rc/) when recursive conditional types and template literal types were introduced, we can use TypeScript to derive a type-safe interface for `Animal`. This library derives the type-safe interface of your object for you so we get both simplicitly and verbose type-safety at the same time.
 
-See the [Deep Enum Constants](#deep-enum-constants) section for this final code usage showing the `move` function with type-safety.
+See the [Deep-Enum Constants](#deep-enum-constants) section for this final code usage showing the `move` function with type-safety.
 
 ### The Trick
 
@@ -284,11 +285,15 @@ Quite simply, this library just converts a normal JavaScript object to a constan
 
 ```ts
 const obj = {a: {b: {c: 'value'}}};
-const MY_ENUM = createDeepEnum(obj);
+const MY_ENUM = createDeepEnumInterface(obj);
 console.log(MY_ENUM.a.b.c); // 'a.b.c'
 ```
 
 There's really no magic to the enum object itself, *but* the value comes in when you use the enum object with the type-safe helper functions of this library for getting/setting deeply nested values in an object using the enum as an interface. This allows you to further decouple "how" objects are updated, and all you need is the "path" and "value" of a property to update.
+
+## Limitations
+
+Doesn't operate on arrays
 
 ## Benchmarks
 

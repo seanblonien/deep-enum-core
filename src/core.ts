@@ -163,16 +163,20 @@ export const createDeepSet =
     set_(obj, path, value, options);
 
 /**
- * Generates a deep-enum object from a regular object that can be used as an enum accessor to an object with the same
- * interface.
+ * Generates a deep-enum interface object from a regular object that can be used as an enum accessor to an
+ * object with the same interface.
  *
  * NOTE: this object ***is immutable, readonly, and can't be changed***, simply because **it is an enum**!
  *
  * @param obj the object to generate the deep-enum from, must be a plain object or record or key-value pair object
- * @param postfixIdentifier the value to append to the end of a path when generating the enum values
+ * @param postfixIdentifier (optional) the value to append to the end of a path when generating the enum values.
+ *
+ * Use this when you went to guarantee that you are not hard-coding string literals and are using the enum interface.
+ *
+ *   ``i.e.``
  * @returns the deep-enum object which holds the paths that can be used to index into the same interface
  */
-export const createDeepEnum = <T extends Pojo>(obj: T, postfixIdentifier = '') =>
+export const createDeepEnumInterface = <T extends Pojo>(obj: T, postfixIdentifier = '') =>
   sealDeepEnum(processProperties(obj, [], postfixIdentifier) as DeepPaths<T>);
 
 /**
@@ -209,7 +213,7 @@ export const createDeepGet =
     get(obj, path);
 
 /**
- * Generates a deep-enum object using {@link createDeepEnum} and getter for getting values from the original object
+ * Generates a deep-enum object using {@link createDeepEnumInterface} and getter for getting values from the original object
  * using {@link createGet}.
  *
  * @param obj the object to generate the deep-enum from, must be a plain object
@@ -217,13 +221,13 @@ export const createDeepGet =
  * original object
  */
 export const createDeepEnumWithGet = <T extends Pojo>(obj: T) => {
-  const deepEnum = createDeepEnum(obj);
+  const deepEnum = createDeepEnumInterface(obj);
   const getEnum = createGet(obj);
   return [deepEnum, getEnum] as const;
 };
 
 const createDeepEnumFullInternal = <T extends Pojo>(obj: T, options?: SetOptions) => {
-  const deepEnum = createDeepEnum(obj);
+  const deepEnum = createDeepEnumInterface(obj);
   const getEnum = createGet(obj);
   const setEnum = createSet(obj, options);
   return [deepEnum, getEnum, setEnum] as const;

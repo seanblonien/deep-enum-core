@@ -1,4 +1,12 @@
-import {createDeepEnum, createGet, deepEnumConstant, DeepEnumConstantType, get, set, setMutable} from 'deep-enum-core';
+import {
+  createDeepEnumInterface,
+  createGet,
+  deepEnumConstant,
+  DeepEnumConstantType,
+  get,
+  set,
+  setMutable,
+} from 'deep-enum-core';
 
 describe('testing creation of a deep enum constant', () => {
   const DirectionsEnum = deepEnumConstant({
@@ -52,7 +60,7 @@ describe('testing type-safety of the Animal example in the readme', () => {
     },
   };
 
-  const AnimalEnum = createDeepEnum(Animal);
+  const AnimalEnum = createDeepEnumInterface(Animal);
   type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
   function move(animal: AnimalType) {
     if (animal === AnimalEnum.Bird.Parrot) {
@@ -70,7 +78,7 @@ describe('testing type-safety of the Animal example in the readme', () => {
     throw new Error('Unknown animal');
   }
 
-  it('should walk the parrot with type-safety', () => {
+  it('should walk the dog with type-safety', () => {
     const actual = move(AnimalEnum.Mammal.Dog);
     const expected = 'Dog is walking';
 
@@ -102,7 +110,7 @@ describe('testing type-safety of the form example in the readmme', () => {
     },
   };
 
-  const USER_FORM_ENUM = createDeepEnum(userForm);
+  const USER_FORM_ENUM = createDeepEnumInterface(userForm);
 
   it('should pass the usage example immutable', () => {
     // immutable object updates

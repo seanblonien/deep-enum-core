@@ -1,5 +1,5 @@
 import {
-  createDeepEnum,
+  createDeepEnumInterface,
   createDeepEnumFullMutable,
   createDeepEnumWithGet,
   createDeepGet,
@@ -30,7 +30,7 @@ const Animal = {
 
 describe('tests the exported primitive functions for the library', () => {
   it('should create a deep enum with expected values', () => {
-    const actual = createDeepEnum(Animal);
+    const actual = createDeepEnumInterface(Animal);
     const expected = {
       Bird: {
         Parrot: 'Bird.Parrot',
@@ -91,7 +91,7 @@ describe('tests the exported primitive functions for the library', () => {
 
 describe('tests the exported advanced functions for the library', () => {
   it('should create the deep and use a valid getter', () => {
-    const animalEnum = createDeepEnum(Animal);
+    const animalEnum = createDeepEnumInterface(Animal);
     const get = createGet(Animal);
 
     const actual = get(animalEnum.Mammal.Cat.Persian);
@@ -100,7 +100,7 @@ describe('tests the exported advanced functions for the library', () => {
     expect(actual).toEqual(expected);
   });
   it('should create the deep and use a valid getter', () => {
-    const animalEnum = createDeepEnum(Animal);
+    const animalEnum = createDeepEnumInterface(Animal);
     const get = createDeepGet(Animal, animalEnum.Mammal.Cat.Persian);
 
     const actual = get();
@@ -120,7 +120,7 @@ describe('tests the exported advanced functions for the library', () => {
   const deepCopy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
   it('should create the deep enum and change a value with a setter mutably', () => {
     const animalCopy = deepCopy(Animal);
-    const animalEnum = createDeepEnum(animalCopy);
+    const animalEnum = createDeepEnumInterface(animalCopy);
     const set = createSet(animalCopy, {isMutable: true});
     set(animalEnum.Mammal.Cat.Persian, 'new Persian value mutable');
 
@@ -130,7 +130,7 @@ describe('tests the exported advanced functions for the library', () => {
     expect(actual).toEqual(expected);
   });
   it('should create the deep enum and change a value with a setter immutably', () => {
-    const animalEnum = createDeepEnum(Animal);
+    const animalEnum = createDeepEnumInterface(Animal);
     const set = createSet(Animal);
     const newAnimalCopy = set(animalEnum.Mammal.Cat.Persian, 'new Persian value immutable');
 
@@ -161,7 +161,7 @@ describe('tests the exported advanced functions for the library', () => {
   });
   it('should create an immutable deep setter for the given object', () => {
     const animalCopy = deepCopy(Animal);
-    const animalEnum = createDeepEnum(animalCopy);
+    const animalEnum = createDeepEnumInterface(animalCopy);
     const set = createDeepSet(animalCopy, animalEnum.Mammal.Cat.Persian);
 
     const newAnimalCopy = set('new Persian value');
@@ -172,7 +172,7 @@ describe('tests the exported advanced functions for the library', () => {
   });
   it('should create a mutable deep setter for the given object', () => {
     const animalCopy = deepCopy(Animal);
-    const animalEnum = createDeepEnum(animalCopy);
+    const animalEnum = createDeepEnumInterface(animalCopy);
     const set = createDeepSet(animalCopy, animalEnum.Mammal.Cat.Persian, {isMutable: true});
 
     set('new Persian value');
@@ -182,7 +182,7 @@ describe('tests the exported advanced functions for the library', () => {
     expect(actual).toEqual(expected);
   });
   it('should set a value in an object immutably', () => {
-    const animalEnum = createDeepEnum(Animal);
+    const animalEnum = createDeepEnumInterface(Animal);
 
     const newAnimal = setImmutable(Animal, animalEnum.Mammal.Cat.Persian, 'new Persian value');
     expect(get(newAnimal, animalEnum.Mammal.Cat.Persian)).toBe('new Persian value');

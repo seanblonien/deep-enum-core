@@ -5,7 +5,7 @@ import {
   getDeepValues,
   createGet,
   sealDeepEnum,
-  createDeepEnum,
+  createDeepEnumInterface,
   createDeepGet,
   createDeepEnumWithGet,
   setImmutable,
@@ -92,7 +92,7 @@ describe('testing enum functions', () => {
   });
   it('should create two equivalent deep-enum objects with an already defined deep-enum object', () => {
     const deepEnum1 = sealDeepEnum(cmsIds);
-    const deepEnum2 = createDeepEnum(cmsIds);
+    const deepEnum2 = createDeepEnumInterface(cmsIds);
 
     expect(deepEnum1).toEqual(deepEnum2);
   });
@@ -101,7 +101,7 @@ describe('testing enum functions', () => {
     deepEnum.page1.title = 'page1.title';
   });
   it('should convert an object with arbitrary values to an deep-enum object', () => {
-    const landmarkEnum = createDeepEnum(landmark);
+    const landmarkEnum = createDeepEnumInterface(landmark);
 
     expect(landmarkEnum.name).toBe('name');
     expect(landmarkEnum.location.type).toBe('location.type');
@@ -114,7 +114,7 @@ describe('testing enum functions', () => {
     expect(landmarkEnum.history.length).toBe('history.length');
   });
   it('should be able to use the deep-enum to get values from the original object', () => {
-    const landmarkEnum = createDeepEnum(landmark);
+    const landmarkEnum = createDeepEnumInterface(landmark);
 
     // string
     expect(get(landmark, landmarkEnum.location.properties.city)).toBe('San Francisco');
@@ -131,7 +131,7 @@ describe('testing enum functions', () => {
     expect(get(landmark, landmarkEnum.history.length)).toBe(BigInt(9007199254740991));
   });
   it('should create a getter and access the objects values the same', () => {
-    const landmarkEnum = createDeepEnum(landmark);
+    const landmarkEnum = createDeepEnumInterface(landmark);
     const getLandmark = createGet(landmark);
 
     // string
@@ -149,13 +149,13 @@ describe('testing enum functions', () => {
     expect(getLandmark(landmarkEnum.history.length)).toBe(BigInt(9007199254740991));
   });
   it('should create a deep getter and access the nested value properly', () => {
-    const landmarkEnum = createDeepEnum(landmark);
+    const landmarkEnum = createDeepEnumInterface(landmark);
     const getLandmarkCity = createDeepGet(landmark, landmarkEnum.location.properties.city);
 
     expect(getLandmarkCity()).toBe('San Francisco');
   });
   it('should create a "nested getter" as a new and allow accessing properties of the nested subpath', () => {
-    const landmarkPropertiesEnum = createDeepEnum(landmark.location.properties);
+    const landmarkPropertiesEnum = createDeepEnumInterface(landmark.location.properties);
     const getProperties = createGet(landmark.location.properties);
 
     expect(getProperties(landmarkPropertiesEnum.city)).toBe('San Francisco');
@@ -164,7 +164,7 @@ describe('testing enum functions', () => {
     expect(getProperties(landmarkPropertiesEnum.isCold)).toBe(false);
   });
   it('should get thrown errors if accessing properties that do not exist on an object', () => {
-    const landmarkEnum = createDeepEnum(landmark);
+    const landmarkEnum = createDeepEnumInterface(landmark);
     const realPath = landmarkEnum.location.properties.city;
     const fakePath1 = 'fakePath.broken' as typeof realPath;
     const fakePath2 = 'fakePath.broken1.broken2.broken3' as typeof realPath;
@@ -186,13 +186,13 @@ describe('testing enum functions', () => {
   });
   it('should throw errors if the object made into a deep-enum has keys with dots in them', () => {
     const obj = {a: {'b.c.d': 'value'}} as const;
-    const deepEnum = createDeepEnum(obj);
+    const deepEnum = createDeepEnumInterface(obj);
 
     // @ts-expect-error testing this throws an invalid property access error
     expect(() => get(obj, deepEnum.a.b.c.d)).toThrow();
   });
   it('should be able to set deeply nested values using the enum immutably', () => {
-    const landmarkEnum = createDeepEnum(landmark);
+    const landmarkEnum = createDeepEnumInterface(landmark);
 
     const newLandmark = setImmutable(landmark, landmarkEnum.location.properties.city, 'Los Angeles');
     expect(get(newLandmark, landmarkEnum.location.properties.city)).toBe('Los Angeles');
@@ -200,14 +200,14 @@ describe('testing enum functions', () => {
   });
   it('should be able to set deeply nested values using the enum immutably via changing previous value', () => {
     const landmarkCopy = deepCopy(landmark);
-    const landmarkEnum = createDeepEnum(landmarkCopy);
+    const landmarkEnum = createDeepEnumInterface(landmarkCopy);
 
     const newLandmark = setImmutable(landmarkCopy, landmarkEnum.location.properties['1'], p => p + 1);
     expect(get(newLandmark, landmarkEnum.location.properties['1'])).toBe(2);
   });
   it('should be able to set deeply nested values using the enum mutably', () => {
     const landmarkCopy = deepCopy(landmark);
-    const landmarkEnum = createDeepEnum(landmarkCopy);
+    const landmarkEnum = createDeepEnumInterface(landmarkCopy);
 
     setMutable(landmarkCopy, landmarkEnum.location.properties.city, 'Los Angeles');
     expect(get(landmarkCopy, landmarkEnum.location.properties.city)).toBe('Los Angeles');

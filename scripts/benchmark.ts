@@ -5,7 +5,7 @@ import _ from 'lodash';
 import objP from 'object-path';
 import objPI from 'object-path-immutable';
 import setV from 'set-value';
-import {get, createDeepEnum, setImmutable, setMutable} from '../src/core';
+import {get, createDeepEnumInterface, setImmutable, setMutable} from '../src/core';
 
 const deepConst = {
   a: {
@@ -103,7 +103,7 @@ const deepCopy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
 describe('comparing get/set methods to other libraries', () => {
   unit('comparing get methods', log => {
     // @ts-expect-error - testing a very deeply nested enum
-    const pathEnum = createDeepEnum(deepConst);
+    const pathEnum = createDeepEnumInterface(deepConst);
 
     const deepEnumTime = time(() => {
       const r = get(deepConst, pathEnum.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z);
@@ -137,7 +137,7 @@ describe('comparing get/set methods to other libraries', () => {
     data.forEach(run => log(chalkTemplate`{${run.label}}: ${run.time}ms`));
   });
   unit('comparing set/setter methods', log => {
-    const pathEnum = createDeepEnum(deepConst);
+    const pathEnum = createDeepEnumInterface(deepConst);
 
     const deepEnumTime = time(() => {
       const deepConstCopy = deepCopy(deepConst);
