@@ -152,3 +152,73 @@ describe('testing type-safety of the form example in the readmme', () => {
     expect(actual).toBe(expected);
   });
 });
+
+describe('testing API interface example code', () => {
+  const Animal = {
+    Bird: {
+      Parrot: 0,
+      Penguin: 0,
+    },
+    Mammal: {
+      Dog: 0,
+      Cat: 0,
+    },
+  } as const;
+
+  it('should properly move the animal with happy path usage', () => {
+    const AnimalEnum = createDeepEnumInterface(Animal);
+    type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
+
+    function move(animal: AnimalType) {
+      return `${animal} type is moving`;
+    }
+
+    const expected = 'Mammal.Dog type is moving';
+    const actual = move(AnimalEnum.Mammal.Dog);
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should not throw an error if a string literal is hard-coded to be same value as enum', () => {
+    const AnimalEnum = createDeepEnumInterface(Animal);
+    type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
+
+    function move(animal: AnimalType) {
+      return `${animal} type is moving`;
+    }
+
+    const expected = 'Mammal.Dog type is moving';
+    const actual = move('Mammal.Dog');
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should properly move the uniquely identified animal', () => {
+    const AnimalEnum = createDeepEnumInterface(Animal, '404974c6');
+    type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
+
+    function move(animal: AnimalType) {
+      return `${animal} type is moving`;
+    }
+
+    const expected = 'Mammal.Dog404974c6 type is moving';
+    const actual = move(AnimalEnum.Mammal.Dog);
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should throw an error if just the path, not the enum value, was used to move the dog', () => {
+    const AnimalEnum = createDeepEnumInterface(Animal, '404974c6');
+    type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
+
+    function move(animal: AnimalType) {
+      return `${animal} type is moving`;
+    }
+
+    const expected = 'Mammal.Dog404974c6 type is moving';
+    // @ts-expect-error this error indicates you are not using the enum properly
+    const actual = move('Mammal.Dog');
+
+    expect(actual).not.toBe(expected);
+  });
+});

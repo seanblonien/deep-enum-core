@@ -16,11 +16,16 @@ type DotIfNotEmpty<Prefix extends string, Suffix extends string> = Prefix extend
  * A path mapping of an object where each property that is not another nested object becomes it's own path as a
  * dot-separated string.
  */
-export type DeepPaths<T, K extends keyof T = keyof T, P extends string = ''> = K extends keyof T
+export type DeepPaths<
+  T,
+  Suffix extends string = '',
+  K extends keyof T = keyof T,
+  P extends string = '',
+> = K extends keyof T
   ? {
       [K in Exclude<keyof T, symbol | number>]: T[K] extends Pojo
-        ? DeepPaths<T[K], keyof T[K], DotIfNotEmpty<P, K>>
-        : DotIfNotEmpty<P, K>;
+        ? DeepPaths<T[K], Suffix, keyof T[K], DotIfNotEmpty<P, K>>
+        : DotIfNotEmpty<P, `${K}${Suffix}`>;
     }
   : never;
 

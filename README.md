@@ -1,6 +1,10 @@
-# deep-enum-core [![NPM version](https://img.shields.io/npm/v/deep-enum-core?style=flat)](https://www.npmjs.com/package/deep-enum-core) [![NPM monthly downloads](https://img.shields.io/npm/dm/deep-enum-core?style=flat)](](https://www.npmjs.com/package/deep-enum-core)) [![coverage](https://codecov.io/gh/seanblonien/deep-enum-core/branch/main/graph/badge.svg?token=LVQ9Y5H2WH)](https://codecov.io/gh/seanblonien/deep-enum-core) [![License](https://img.shields.io:/npm/l/deep-enum-core)]()
+<!-- markdownlint-disable MD028 -->
+<!-- markdownlint-disable MD051 -->
+<!-- markdownlint-disable MD033 -->
 
-> Make a deeply nested enum of constant values that provides type-safety for those constants
+# deep-enum-core [![NPM version](https://img.shields.io/npm/v/deep-enum-core?style=flat)](https://www.npmjs.com/package/deep-enum-core) [![NPM monthly downloads](https://img.shields.io/npm/dm/deep-enum-core?style=flat)](](https://www.npmjs.com/package/deep-enum-core)) [![coverage](https://codecov.io/gh/seanblonien/deep-enum-core/branch/main/graph/badge.svg?token=LVQ9Y5H2WH)](https://codecov.io/gh/seanblonien/deep-enum-core) [![License](https://img.shields.io:/npm/l/deep-enum-core)](LICENSE)
+
+> Make a deeply nested **enum of constant values** that provides type-safety for those constants
 
 > OR, make a deeply nested enum **from an object's interface** to provide full type-safety for getting/setting those nested properties on that interface
 
@@ -21,11 +25,14 @@ npm install deep-enum-core
 
 There are two primary use cases for this library:
 
-### **Deep-Enum Constants**
+### **Deep-Enum Constant**
 
-A deep-enum constant is a constant, readonly object that is used to semantically group constants together in a nested fashion (like a regular `enum`, but nested). The main use case for this is, like with normal enums, 1) re-use and 2) type-safety.
+A deep-enum constant is a constant, readonly object that is used to semantically group constants together in a nested fashion (like a [regular TS `enum`](https://www.typescriptlang.org/docs/handbook/enums.html), but nested). The main use case for this is, like with normal enums, 1) re-use and 2) type-safety.
 
-Here is an example of creating a deep-enum constant for storing specifc values (i.e. the value of the enum needs to be a specific string or number):
+Here is an example of creating a deep-enum constant for storing specifc values (i.e. the value of the enum needs to be a *specific* string or number):
+
+<details>
+  <summary><i>deep-enum constant usage</i></summary>
 
 ```ts
 // (excluding import statements)
@@ -55,12 +62,22 @@ function move(direction: DirectionsType) {
 // move-usage.ts
 move(DirectionsEnum.Cardinal.N);  // ✅ You are now moving north
 move(DirectionsEnum.Cardinal.SE); // ✅ You are now moving southeast
-move('invalid');                  // ❌ Argument of type '"invalid"' is not assignable to parameter of type '"north" | "east" | "south" | "west" | "northeast" | "southwest" | "southeast" | "northwest"'.
+move('invalid');                  // ❌ Argument of type '"invalid"' is not assignable to parameter
+                                  //     of type '"north" | "east" | "south" | "west" | "northeast" |
+                                  //     "southwest" | "southeast" | "northwest"'.
+
 ```
+
+</details>
 
 **NOTE:** the object *must* have the TypeScript `const` keyword to indicate that the property values are string literals and not just strings ([read more why in TS docs](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-inference)).
 
-But sometimes, you don't really need to store a specific value for an enum, you just want the type-safety and explicit nature of the enum. In these cases, you can create a deep-enum constant that **ignores the enum values**, like so:
+### **Deep-Enum Interface**
+
+But sometimes, you don't really need to store a specific value for an enum, you just want the type-safety and explicit nature of the enum. In this case, you can create a deep-enum interface that **ignores the enum values**, and **creates new, unique enum values for you** like so:
+
+<details>
+  <summary><i>deep-enum interface (constant) usage</i></summary>
 
 ```ts
 // AnimalEnum.ts
@@ -75,9 +92,11 @@ const Animal = {
   },
 };
 
-// NOTE: the values are "ignored" and "don't matter" in this use-case (by choice) because the enum object
-// generates new values to represent each constant. If you *just want type-safety* for deeply nested enum constants, 
-// you shouldn't have to worry about the values. See the previous section if you do care about the values.
+// NOTE: the values are "ignored" and "don't matter" in this use-case (by choice)
+// because the enum object generates new values to represent each constant. 
+// If you *just want type-safety* for deeply nested enum constants, you shouldn't
+// have to worry about the values. See the previous section if you do care about
+// the values.
 export const AnimalEnum = createDeepEnumInterface(Animal);
 export type AnimalType = DeepEnumType<typeof AnimalEnum>;
 
@@ -90,17 +109,25 @@ function move(animal: AnimalType) {
 
 // move-usage.ts
 move(AnimalEnum.Mammal.Dog); // ✅
-move(0);                      // ❌ Argument of type '0' is not assignable to parameter of type '"Bird.Parrot" | "Bird.Penguin" | "Mammal.Dog" | "Mammal.Cat"'
+move(0);                     // ❌ Argument of type '0' is not assignable to 
+                             //    parameter of type '"Bird.Parrot" | "Bird.Penguin" | 
+                             //    "Mammal.Dog" | "Mammal.Cat"'
 ```
 
-See the [API section](#api) for more details on how the interfaces work.
+</details>
 
-### **Deep-Enum Interface**
+**Explanation:** This simply creates an object where the primitive "leaf" properties are assigned their path. And with each leaf property assigned their path, the object can be used as a type-safe index to any object with the same interface (including itself). So, this allows us to use the enum for what enums are used for -- indexing into an object for typesafety. (See [`createDeepEnumInterface` API](#createdeepenuminterfaceobj-postfixidentifier) for more about its limitations.)
 
-A deep-enum interface will allow you to get/set (read/write) to deeply nested properties of that object using the enum as the interface (abstract from the object that is being changed). All you need is the deep-enum interface to specify which property/path you want to update on a given object of that same interface.
+#### **Deep-Enum Interface as an Accessor**
+
+A deep-enum interface provides you with a type-safe index to any object with the same interface. This means we can use it to get/set (read/write) to deeply nested properties of objects using the enum as the interface (abstract from the object that is being changed). All you need is the deep-enum interface to specify which property/path you want to update on a given object of that same interface.
+
+<details>
+  <summary><i>deep-enum interface (accessor) usage</i></summary>
 
 ```ts
-// a TypeScript interface that is static that we want to make a deep-enum interace out of to update its nested properties
+// a TypeScript interface that is static that we want to make a deep-enum
+// interace out of to update its nested properties
 type UserForm = {
   user: {
     name: string;
@@ -120,7 +147,8 @@ const userForm: UserForm = {
   },
 };
 
-// create a deep-enum object that can be used to type-safely reference paths of the above object
+// create a deep-enum object that can be used to type-safely reference
+// paths of the above object
 const USER_FORM_ENUM = createDeepEnumInterface(userForm);
 
 // immutable object updates
@@ -133,11 +161,14 @@ get(userForm, USER_FORM_ENUM.user.address.line1); // '123 Main St mutable'
 
 ```
 
+</details>
+
 Continue onto the [API](#api) to see the full list of the helper functions you can use to avoid some of this boiler plate and get re-use when doing get/set on an object using a deep-enum.
 
 ## API
 
-Terms:
+<details>
+  <summary><h3>Glossary of Terms:<h3></summary>
 
 - **enum**: a group of related constants that share sematic meaning. its values are used to enforce more strict type-safety on variables and paramters
   - [TypeScript docs](https://www.typescriptlang.org/docs/handbook/enums.html#enums) define enums to "allow a developer to define a set of named constants. Using enums can make it easier to document intent, or create a set of distinct cases."
@@ -148,22 +179,28 @@ Terms:
   - e.g., `const obj = {a: {b: {c: 'value'}}};` has 1 deep-enum path `'a.b.c'`
 - **deep-enum value**: a deep-enum path's value
   - e.g., `const obj = {a: {b: {c: 'value'}}};` has 1 leaf value: `'value'`
+- **leaf property**: a primitive value in a deeply nested object (no further nesting exists on the property)
 
-### createDeepEnumInterface(obj, postfixIdentifier)
+</details>
+
+<details>
+  <summary><h3><code>createDeepEnumInterface(obj, postfixIdentifier)</code><h3></summary>
 
 - Generates a deep-enum interface object from a regular object that can be used as an enum accessor to an object with the same interface.
 - NOTE: this object ***is immutable, readonly, and can't be changed***, simply because **it is an enum**!
 - **Params**
   - `obj`: the object to generate the deep-enum from, must be a plain object or record or key-value pair object
   - `postfixIdentifier` (optional): the value to append to the end of a path when generating the enum values
-    - Use this to detect if you are properly using the deep enum object interface and not hard-coding the string literals anywhere, e.g.
-
-    ```ts
-    
-    ```
-
+    - Use this to detect if you are properly using the deep enum object interface and not hard-coding the string literals/paths anywhere, e.g.
+      <!-- markdownlint-disable MD031 -->
+      ```ts
+      console.log();
+      ```
+      <!-- markdownlint-enable MD031 -->
 - **Returns**
   - the deep-enum object which holds the paths that can be used to index into the same interface
+
+</details>
 
 ## Motivation
 
@@ -297,4 +334,4 @@ Doesn't operate on arrays
 
 ## Benchmarks
 
-## Related
+## Related Projects

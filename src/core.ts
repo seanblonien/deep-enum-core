@@ -176,8 +176,10 @@ export const createDeepSet =
  *   ``i.e.``
  * @returns the deep-enum object which holds the paths that can be used to index into the same interface
  */
-export const createDeepEnumInterface = <T extends Pojo>(obj: T, postfixIdentifier = '') =>
-  sealDeepEnum(processProperties(obj, [], postfixIdentifier) as DeepPaths<T>);
+export const createDeepEnumInterface = <T extends Pojo, PostFixType extends string = ''>(
+  obj: T,
+  postfixIdentifier = '' as PostFixType,
+) => sealDeepEnum(processProperties(obj, [], postfixIdentifier) as DeepPaths<T, PostFixType>);
 
 /**
  * Creates a deep enum constant object by making it immutable
@@ -213,8 +215,8 @@ export const createDeepGet =
     get(obj, path);
 
 /**
- * Generates a deep-enum object using {@link createDeepEnumInterface} and getter for getting values from the original object
- * using {@link createGet}.
+ * Generates a deep-enum object using {@link createDeepEnumInterface} and getter for getting values from the
+ * original object using {@link createGet}.
  *
  * @param obj the object to generate the deep-enum from, must be a plain object
  * @returns a tuple where the first value is the the deep-enum object, and the second value is the getter on the
