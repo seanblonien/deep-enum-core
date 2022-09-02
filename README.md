@@ -2,7 +2,7 @@
 <!-- markdownlint-disable MD051 -->
 <!-- markdownlint-disable MD033 -->
 
-# deep-enum-core [![NPM version](https://img.shields.io/npm/v/deep-enum-core?style=flat)](https://www.npmjs.com/package/deep-enum-core) [![NPM monthly downloads](https://img.shields.io/npm/dm/deep-enum-core?style=flat)](](https://www.npmjs.com/package/deep-enum-core)) [![coverage](https://codecov.io/gh/seanblonien/deep-enum-core/branch/main/graph/badge.svg?token=LVQ9Y5H2WH)](https://codecov.io/gh/seanblonien/deep-enum-core) [![License](https://img.shields.io:/npm/l/deep-enum-core)](LICENSE)
+# deep-enum-core [![NPM version](https://img.shields.io/npm/v/deep-enum-core?style=flat)](https://www.npmjs.com/package/deep-enum-core) [![npm bundle size](https://img.shields.io/bundlephobia/minzip/deep-enum-core)](https://bundlephobia.com/package/deep-enum-core) [![coverage](https://codecov.io/gh/seanblonien/deep-enum-core/branch/main/graph/badge.svg?token=LVQ9Y5H2WH)](https://codecov.io/gh/seanblonien/deep-enum-core) [![License](https://img.shields.io:/npm/l/deep-enum-core)](LICENSE)
 
 > Make a deeply nested **enum of constant values** that provides type-safety for those constants
 
