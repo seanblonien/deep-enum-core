@@ -61,16 +61,9 @@ function move(direction: DirectionsType) {
 
 // move-usage.ts
 
-// ✅ You are now moving north
-move(DirectionsEnum.Cardinal.N);
-
-// ✅ You are now moving southeast
-move(DirectionsEnum.Cardinal.SE);
-
-// ❌ Argument of type '"invalid"' is not assignable to parameter of type
-//    '"north" | "east" | "south" | "west" | "northeast" | "southwest" |
-//    "southeast" | "northwest"'.
-move('invalid');                  
+move(DirectionsEnum.Cardinal.N);  // ✅ You are now moving north
+move(DirectionsEnum.Cardinal.SE); // ✅ You are now moving southeast
+move('invalid');                  // ❌ Argument of type '"invalid"' is not assignable to parameter of type '"north" | "east" | "south" | "west" | "northeast" | "southwest" | "southeast" | "northwest"'.   
 ```
 
 </details>
@@ -114,12 +107,8 @@ function move(animal: AnimalType) {
 
 // move-usage.ts
 
- // ✅
-move(AnimalEnum.Mammal.Dog);
-
-// ❌ Argument of type '0' is not assignable to parameter of type
-//    '"Bird.Parrot" | "Bird.Penguin" | "Mammal.Dog" | "Mammal.Cat"'
-move(0);                     
+move(AnimalEnum.Mammal.Dog); // ✅
+move(0);                     // ❌ Argument of type '0' is not assignable to parameter of type '"Bird.Parrot" | "Bird.Penguin" | "Mammal.Dog" | "Mammal.Cat"'                   
 ```
 
 </details>
@@ -232,13 +221,8 @@ Continue onto the [API](#api) to see the full list of the helper functions you c
           const AnimalEnum = createDeepEnumInterface(Animal, '123');
           // ...the rest stays the same
 
-          // ❌
-          // Argument of type '"Mammal.Dog"' is not assignable to parameter of type
-          // '"Bird.Parrot123" | "Bird.Penguin123" | "Mammal.Dog123" | "Mammal.Cat123"'.
-          move('Mammal.Dog');
-
-          // ✅
-          move(AnimalEnum.Mammal.Dog);
+          move('Mammal.Dog');          // ❌ Argument of type '"Mammal.Dog"' is not assignable to parameter of type '"Bird.Parrot123" | "Bird.Penguin123" | "Mammal.Dog123" | "Mammal.Cat123"'.
+          move(AnimalEnum.Mammal.Dog); // ✅
           AnimalEnum.Mammal.Dog === "Mammal.Dog123" // true
       ```
       <!-- markdownlint-enable MD031 -->
