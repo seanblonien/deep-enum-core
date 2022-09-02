@@ -1,0 +1,39 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛒
+        uses: actions/checkout@v2
+
+      - name: Setup Node 🏗️
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+          cache: "npm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install Dependencies ⬇
+        run: npm ci
+
+      - name: Typecheck, Lint, Test 🧪
+        run: npm run test:ci
+
+      - name: Upload coverage to Codecov 📔
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Build 🔧
+        run: npm run build
+
+      - name: Publish 📦
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
