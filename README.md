@@ -121,7 +121,7 @@ move(0);                     // ❌ Argument of type '0' is not assignable to pa
 
 #### **Deep-Enum Interface as an Accessor**
 
-A deep-enum interface provides you with a type-safe index to any object with the same interface. This means we can use it to get/set (read/write) to deeply nested properties of objects using the enum as the interface (abstract from the object that is being changed). All you need is the deep-enum interface to specify which property/path you want to update on a given object of that same interface.
+A deep-enum interface provides you with a type-safe index to any object with the same interface. This means we can use it to access (get/set or read/write) deeply nested properties of objects using the enum as the interface (abstract from the object that is being changed). All you need is the deep-enum interface to specify which property/path you want to update on a given object of that same interface.
 
 <details>
   <summary><i>deep-enum interface (accessor) usage</i></summary>

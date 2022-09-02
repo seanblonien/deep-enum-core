@@ -168,10 +168,12 @@ describe('tests the exported advanced functions for the library', () => {
     const actual = newAnimalCopy.Mammal.Cat.Persian;
     const expected = 'new Persian value';
 
+    expect(newAnimalCopy).not.toBe(animalCopy);
     expect(actual).toEqual(expected);
   });
   it('should create a mutable deep setter for the given object', () => {
     const animalCopy = deepCopy(Animal);
+    const animalOriginal = animalCopy;
     const animalEnum = createDeepEnumInterface(animalCopy);
     const set = createDeepSet(animalCopy, animalEnum.Mammal.Cat.Persian, {isMutable: true});
 
@@ -179,12 +181,15 @@ describe('tests the exported advanced functions for the library', () => {
     const actual = animalCopy.Mammal.Cat.Persian;
     const expected = 'new Persian value';
 
+    expect(animalCopy).toBe(animalOriginal);
     expect(actual).toEqual(expected);
   });
   it('should set a value in an object immutably', () => {
     const animalEnum = createDeepEnumInterface(Animal);
 
     const newAnimal = setImmutable(Animal, animalEnum.Mammal.Cat.Persian, 'new Persian value');
+
+    expect(Animal).not.toBe(newAnimal);
     expect(get(newAnimal, animalEnum.Mammal.Cat.Persian)).toBe('new Persian value');
     expect(get(Animal, animalEnum.Mammal.Cat.Persian)).toBe('hidden Persian value');
   });
