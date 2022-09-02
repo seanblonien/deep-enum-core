@@ -57,7 +57,7 @@ module.exports = {
   reportUnusedDisableDirectives: true,
   rules: {
     // other
-    'max-len': ['warn', {code: 100, comments: 120}],
+    'max-len': ['warn', {code: 100, comments: 120, ignoreUrls: true}],
     'max-lines-per-function': ['error', 100],
     'require-await': 'off',
     'object-property-newline': ['error', {allowAllPropertiesOnSameLine: true}],

@@ -60,12 +60,17 @@ function move(direction: DirectionsType) {
 }
 
 // move-usage.ts
-move(DirectionsEnum.Cardinal.N);  // ✅ You are now moving north
-move(DirectionsEnum.Cardinal.SE); // ✅ You are now moving southeast
-move('invalid');                  // ❌ Argument of type '"invalid"' is not assignable to parameter
-                                  //     of type '"north" | "east" | "south" | "west" | "northeast" |
-                                  //     "southwest" | "southeast" | "northwest"'.
 
+// ✅ You are now moving north
+move(DirectionsEnum.Cardinal.N);
+
+// ✅ You are now moving southeast
+move(DirectionsEnum.Cardinal.SE);
+
+// ❌ Argument of type '"invalid"' is not assignable to parameter of type
+//    '"north" | "east" | "south" | "west" | "northeast" | "southwest" |
+//    "southeast" | "northwest"'.
+move('invalid');                  
 ```
 
 </details>
@@ -108,10 +113,13 @@ function move(animal: AnimalType) {
 }
 
 // move-usage.ts
-move(AnimalEnum.Mammal.Dog); // ✅
-move(0);                     // ❌ Argument of type '0' is not assignable to 
-                             //    parameter of type '"Bird.Parrot" | "Bird.Penguin" | 
-                             //    "Mammal.Dog" | "Mammal.Cat"'
+
+ // ✅
+move(AnimalEnum.Mammal.Dog);
+
+// ❌ Argument of type '0' is not assignable to parameter of type
+//    '"Bird.Parrot" | "Bird.Penguin" | "Mammal.Dog" | "Mammal.Cat"'
+move(0);                     
 ```
 
 </details>
@@ -188,21 +196,59 @@ Continue onto the [API](#api) to see the full list of the helper functions you c
 
 - Generates a deep-enum interface object from a regular object that can be used as an enum accessor to an object with the same interface.
 - NOTE: this object ***is immutable, readonly, and can't be changed***, simply because **it is an enum**!
+- This simply creates an object where the primitive "leaf" properties are assigned their path. And with each leaf property assigned their path, the object can be used as a type-safe index to any object with the same interface (including itself). So, this allows us to use the enum for what enums are used for -- indexing into an object for typesafety.
 - **Params**
   - `obj`: the object to generate the deep-enum from, must be a plain object or record or key-value pair object
   - `postfixIdentifier` (optional): the value to append to the end of a path when generating the enum values
     - Use this to detect if you are properly using the deep enum object interface and not hard-coding the string literals/paths anywhere, e.g.
       <!-- markdownlint-disable MD031 -->
       ```ts
-      console.log();
+          const Animal = {
+            Bird: {
+              Parrot: 0,
+              Penguin: 0,
+            },
+            Mammal: {
+              Dog: 0,
+              Cat: 0,
+            },
+          };
+
+          const AnimalEnum = createDeepEnumInterface(Animal);
+          type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
+
+          function move(animal: AnimalType) { }
+
+          // ⚠ NO TYPE ERROR! ⚠
+          // This is because by `createDeepEnumInterface` converts the values
+          // to the string literal path name, so this is technically valid
+          // structural type-safety (this string literal is equal to the 
+          // enum's same string literal).
+          move('Mammal.Dog');
+
+
+          // ✔ The fix ✔
+          // Use the `postfixIdentifier` param to guarantee uniqueness
+          const AnimalEnum = createDeepEnumInterface(Animal, '123');
+          // ...the rest stays the same
+
+          // ❌
+          // Argument of type '"Mammal.Dog"' is not assignable to parameter of type
+          // '"Bird.Parrot123" | "Bird.Penguin123" | "Mammal.Dog123" | "Mammal.Cat123"'.
+          move('Mammal.Dog');
+
+          // ✅
+          move(AnimalEnum.Mammal.Dog);
+          AnimalEnum.Mammal.Dog === "Mammal.Dog123" // true
       ```
       <!-- markdownlint-enable MD031 -->
+    - **NOTE**: you don't need to always use the `postfixIdentifier` param. You can just add it, see if there are type errors, and remove it. No need to keep it in the code (unless you have other purposes for it).
 - **Returns**
   - the deep-enum object which holds the paths that can be used to index into the same interface
 
 </details>
 
-## Motivation
+## Motivation Deep Dive
 
 The main reason to use enums is to have stricter type-safety for a set of related constants, while also conveying the semantics of those constants.
 
@@ -234,6 +280,7 @@ A **deep-enum** is an object that defines constants in a semantically meaningful
 In an *ideal world*, if this was native to TypeScript, it could look something like this:
 
 ```ts
+// CHANGE TO DIRECTIONS EXAMPLE
 enum Animal {
   Bird: {
     Parrot,

@@ -163,7 +163,7 @@ describe('testing API interface example code', () => {
       Dog: 0,
       Cat: 0,
     },
-  } as const;
+  };
 
   it('should properly move the animal with happy path usage', () => {
     const AnimalEnum = createDeepEnumInterface(Animal);
@@ -194,28 +194,28 @@ describe('testing API interface example code', () => {
   });
 
   it('should properly move the uniquely identified animal', () => {
-    const AnimalEnum = createDeepEnumInterface(Animal, '404974c6');
+    const AnimalEnum = createDeepEnumInterface(Animal, '123');
     type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
 
     function move(animal: AnimalType) {
       return `${animal} type is moving`;
     }
 
-    const expected = 'Mammal.Dog404974c6 type is moving';
+    const expected = 'Mammal.Dog123 type is moving';
     const actual = move(AnimalEnum.Mammal.Dog);
 
     expect(actual).toBe(expected);
   });
 
   it('should throw an error if just the path, not the enum value, was used to move the dog', () => {
-    const AnimalEnum = createDeepEnumInterface(Animal, '404974c6');
+    const AnimalEnum = createDeepEnumInterface(Animal, '123');
     type AnimalType = DeepEnumConstantType<typeof AnimalEnum>;
 
     function move(animal: AnimalType) {
       return `${animal} type is moving`;
     }
 
-    const expected = 'Mammal.Dog404974c6 type is moving';
+    const expected = 'Mammal.Dog123 type is moving';
     // @ts-expect-error this error indicates you are not using the enum properly
     const actual = move('Mammal.Dog');
 

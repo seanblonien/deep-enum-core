@@ -166,14 +166,10 @@ export const createDeepSet =
  * Generates a deep-enum interface object from a regular object that can be used as an enum accessor to an
  * object with the same interface.
  *
- * NOTE: this object ***is immutable, readonly, and can't be changed***, simply because **it is an enum**!
+ * [Detailed API with examples for `createDeepEnumInterface`](https://github.com/seanblonien/deep-enum-core#createdeepenuminterfaceobj-postfixidentifier)
  *
  * @param obj the object to generate the deep-enum from, must be a plain object or record or key-value pair object
- * @param postfixIdentifier (optional) the value to append to the end of a path when generating the enum values.
- *
- * Use this when you went to guarantee that you are not hard-coding string literals and are using the enum interface.
- *
- *   ``i.e.``
+ * @param postfixIdentifier the value to append to the end of a path when generating the enum values.
  * @returns the deep-enum object which holds the paths that can be used to index into the same interface
  */
 export const createDeepEnumInterface = <T extends Pojo, PostFixType extends string = ''>(
