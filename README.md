@@ -80,7 +80,8 @@ But sometimes, you don't really need to store a specific value for an enum, you 
 ```ts
 // AnimalEnum.ts
 
-// Note: the placeholder values can be anything, `0` was chosen because it's short/makes sense (`null`/`undefined` work too!)
+// Note: the placeholder values can be anything, `0` was chosen because it's 
+// short/makes sense as a default (`null`/`undefined` work too!)
 const Animal = {
   Bird: {
     Parrot: 0,
@@ -117,11 +118,11 @@ move(0);                     // ❌ Argument of type '0' is not assignable to pa
 
 </details>
 
-**Explanation:** This simply creates an object where the primitive "leaf" properties are assigned their path. And with each leaf property assigned their path, the object can be used as a type-safe index to any object with the same interface (including itself). So, this allows us to use the enum for what enums are used for -- indexing into an object for typesafety. (See [`createDeepEnumInterface` API](#createdeepenuminterfaceobj-postfixidentifier) for more about its limitations.)
+**Explanation:** This creates an object where the primitive "leaf" properties are assigned their path. And with each leaf property assigned their path (which is gauranteed to be internally unique), the object can be used as a type-safe index to any object with the same interface (including itself). So, this allows us to use the enum for what enums are used for -- indexing into an object for typesafety. (See [`createDeepEnumInterface` API](#createdeepenuminterfaceobj-postfixidentifier) for more about its limitations.)
 
 #### **Deep-Enum Interface as an Accessor**
 
-A deep-enum interface provides you with a type-safe index to any object with the same interface. This means we can use it to access (get/set or read/write) deeply nested properties of objects using the enum as the interface (abstract from the object that is being changed). All you need is the deep-enum interface to specify which property/path you want to update on a given object of that same interface.
+A deep-enum interface provides you with a type-safe index to any object with the same interface. This means we can use it to access (get/set, read/write) deeply nested properties of objects using the enum as the interface, abstract from the object that is being changed. All you need is the deep-enum interface to specify which property/path you want to update on a given object of that same interface.
 
 <details>
   <summary><i>deep-enum interface (accessor) usage</i></summary>
@@ -189,7 +190,7 @@ Continue onto the [API](#api) to see the full list of the helper functions you c
 
 - Generates a deep-enum interface object from a regular object that can be used as an enum accessor to an object with the same interface.
 - NOTE: this object ***is immutable, readonly, and can't be changed***, simply because **it is an enum**!
-- This simply creates an object where the primitive "leaf" properties are assigned their path. And with each leaf property assigned their path, the object can be used as a type-safe index to any object with the same interface (including itself). So, this allows us to use the enum for what enums are used for -- indexing into an object for typesafety.
+- This creates an object where the primitive "leaf" properties are assigned their path. And with each leaf property assigned their path (which is gauranteed to be internally unique), the object can be used as a type-safe index to any object with the same interface (including itself). So, this allows us to use the enum for what enums are used for -- indexing into an object for typesafety.
 - **Params**
   - `obj`: the object to generate the deep-enum from, must be a plain object or record or key-value pair object
   - `postfixIdentifier` (optional): the value to append to the end of a path when generating the enum values
@@ -218,6 +219,7 @@ Continue onto the [API](#api) to see the full list of the helper functions you c
           // structural type-safety (this string literal is equal to the 
           // enum's same string literal).
           move('Mammal.Dog');
+          AnimalEnum.Mammal.Dog === "Mammal.Dog" // true
 
 
           // ✔ The fix ✔
@@ -227,6 +229,7 @@ Continue onto the [API](#api) to see the full list of the helper functions you c
 
           move('Mammal.Dog');          // ❌ Argument of type '"Mammal.Dog"' is not assignable to parameter of type '"Bird.Parrot123" | "Bird.Penguin123" | "Mammal.Dog123" | "Mammal.Cat123"'.
           move(AnimalEnum.Mammal.Dog); // ✅
+          AnimalEnum.Mammal.Dog === "Mammal.Dog"    // false
           AnimalEnum.Mammal.Dog === "Mammal.Dog123" // true
       ```
       <!-- markdownlint-enable MD031 -->
