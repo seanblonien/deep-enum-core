@@ -6,7 +6,7 @@
 
 > Make a deeply nested **enum of constant values** that provides type-safety for those constants
 
-> OR, make a deeply nested enum **from an object's interface** to provide full type-safety for getting/setting those nested properties on that interface
+> OR, make a deeply nested enum from an *object's interface* to provide **full type-safety for accessing those properties** on that interface
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -79,6 +79,8 @@ But sometimes, you don't really need to store a specific value for an enum, you 
 
 ```ts
 // AnimalEnum.ts
+
+// Note: the placeholder values can be anything, `0` was chosen because it's short/makes sense (`null`/`undefined` work too!)
 const Animal = {
   Bird: {
     Parrot: 0,
@@ -90,13 +92,16 @@ const Animal = {
   },
 };
 
-// NOTE: the values are "ignored" and "don't matter" in this use-case (by choice)
+// The values are "ignored" and "don't matter" in this use-case (by choice)
 // because the enum object generates new values to represent each constant. 
 // If you *just want type-safety* for deeply nested enum constants, you shouldn't
-// have to worry about the values. See the previous section if you do care about
+// have to worry about the values. See the previous section if you *do* care about
 // the values.
 export const AnimalEnum = createDeepEnumInterface(Animal);
 export type AnimalType = DeepEnumType<typeof AnimalEnum>;
+
+// Note: you shouldn't be using the `Animal` object directly anymore if you're using 
+// the enum properly (doesn't need to be exported)
 
 // move.ts
 function move(animal: AnimalType) {
@@ -106,7 +111,6 @@ function move(animal: AnimalType) {
 }
 
 // move-usage.ts
-
 move(AnimalEnum.Mammal.Dog); // ✅
 move(0);                     // ❌ Argument of type '0' is not assignable to parameter of type '"Bird.Parrot" | "Bird.Penguin" | "Mammal.Dog" | "Mammal.Cat"'                   
 ```

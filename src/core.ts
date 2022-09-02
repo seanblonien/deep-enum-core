@@ -21,7 +21,7 @@ import {deepFreeze, flattenObjectPaths, getInitializer, isPlainObject} from '@ut
  * @param freeze whether or not to make the deep-enum returned readonly (deeply froezen), defaults to `true`
  * @returns the deep-enum object with validated type, or `never` if invalid
  */
-export const sealDeepEnum = <T extends Pojo, B extends true | false>(
+export const sealDeepEnum = <T extends Pojo, B extends true | false = true>(
   obj: T,
   freeze = true as B,
 ) => {

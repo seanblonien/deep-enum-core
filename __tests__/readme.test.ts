@@ -153,6 +153,42 @@ describe('testing type-safety of the form example in the readmme', () => {
   });
 });
 
+describe('testing initial object with different placeholder values', () => {
+  const Animal = {
+    Bird: {
+      Parrot: null,
+      Penguin: null,
+    },
+    Mammal: {
+      Dog: undefined,
+      Cat: -1,
+    },
+  } as const;
+
+  const AnimalEnum = createDeepEnumInterface(Animal);
+
+  it('should ignore the null placeholder value when creating parrot enum', () => {
+    const expected = 'Bird.Parrot';
+    const actual = AnimalEnum.Bird.Parrot;
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should ignore the undefined placeholder value when creating dog enum', () => {
+    const expected = 'Mammal.Dog';
+    const actual = AnimalEnum.Mammal.Dog;
+
+    expect(actual).toBe(expected);
+  });
+
+  it('should ignore the number placeholder value when creating cat enum', () => {
+    const expected = 'Mammal.Cat';
+    const actual = AnimalEnum.Mammal.Cat;
+
+    expect(actual).toBe(expected);
+  });
+});
+
 describe('testing API interface example code', () => {
   const Animal = {
     Bird: {
