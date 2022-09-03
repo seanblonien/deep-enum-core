@@ -1,0 +1,35 @@
+{
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": true,
+  "editor.renderControlCharacters": false,
+  "editor.renderWhitespace": "none",
+  "editor.rulers": [
+    100,
+    120
+  ],
+  "editor.suggestSelection": "first",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "eslint.format.enable": true,
+  "files.autoSave": "onFocusChange",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "javascript.preferences.importModuleSpecifier": "shortest",
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.referencesCodeLens.showOnAllFunctions": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.updateImportsOnFileMove.enabled": "always"
+}

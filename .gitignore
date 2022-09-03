@@ -1,0 +1,16 @@
+# general
+*.log
+*.tgz
+*.DS_Store
+.idea
+
+# npm
+node_modules
+
+# cache
+.eslintcache
+
+# build related
+dist
+coverage
+out

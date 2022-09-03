@@ -1,0 +1,52 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "paths": {
+      "deep-enum-core": [
+        "./src"
+      ],
+      "@utils": [
+        "./src/utils.ts"
+      ],
+      "@types": [
+        "./src/types.ts"
+      ],
+      "@core": [
+        "./src/core.ts"
+      ]
+    },
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      },
+      {
+        "transform": "typescript-transform-paths",
+        "afterDeclarations": true
+      },
+      {
+        "transform": "tsc-progress",
+        "title": "Build"
+      }
+    ]
+  },
+  "include": [
+    "__tests__/*.ts",
+    "src/*.ts",
+    "scripts/*.ts",
+    ".eslintrc.cjs"
+  ]
+}

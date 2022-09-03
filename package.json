@@ -1,0 +1,121 @@
+{
+  "name": "deep-enum-core",
+  "version": "0.0.3",
+  "description": "Make deeply nested enums out of any constant object with a full type-safe interface.",
+  "author": "Sean Blonien",
+  "license": "MIT",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "homepage": "https://github.com/seanblonien/deep-enum-core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seanblonien/deep-enum-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seanblonien/deep-enum-core/issues"
+  },
+  "keywords": [
+    "deep",
+    "enum",
+    "enumeration",
+    "path",
+    "constant",
+    "object",
+    "typescript",
+    "type-safe",
+    "nested",
+    "json",
+    "deeply",
+    "dot",
+    "notation",
+    "immutable"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "run-s clean test:ci build",
+    "prepare": "ts-patch install -s",
+    "clean": "rimraf dist out",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:ci": "cross-env CI=true run-p typecheck lint test",
+    "test:w": "jest --watch",
+    "lint": "eslint --cache --fix --ext .cjs,.ts .",
+    "dev": "npm run build -- -w",
+    "benchmark": "tsc -p tsconfig.benchmark.json && node --experimental-specifier-resolution=node out/scripts/benchmark",
+    "size": "tsc -p tsconfig.size.json && node out/package-size"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/js-with-ts-esm",
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.json"
+      }
+    },
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(test).ts"
+    ],
+    "collectCoverage": true,
+    "coverageReporters": [
+      "text",
+      "cobertura"
+    ]
+  },
+  "devDependencies": {
+    "@types/get-value": "^3.0.3",
+    "@types/inquirer": "^9.0.1",
+    "@types/jest": "^28.1.8",
+    "@types/jsdom": "^20.0.0",
+    "@types/lodash": "^4.14.184",
+    "@types/object-path": "^0.11.1",
+    "@types/set-value": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
+    "chalk": "^5.0.1",
+    "chalk-template": "^0.4.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.23.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsdoc": "^39.3.6",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-sonarjs": "^0.15.0",
+    "eslint-plugin-sort-export-all": "^1.2.2",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "get-value": "^3.0.1",
+    "globby": "^13.1.2",
+    "inquirer": "^9.1.1",
+    "jest": "^28.1.3",
+    "jsdom": "^20.0.0",
+    "lodash": "^4.17.21",
+    "nodemon": "^2.0.19",
+    "npm-run-all": "^4.1.5",
+    "object-path": "^0.11.8",
+    "object-path-immutable": "^4.1.2",
+    "open-cli": "^7.0.1",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "set-value": "^4.1.0",
+    "ts-jest": "^28.0.8",
+    "ts-patch": "^2.0.2",
+    "tsc-progress": "^1.0.4",
+    "typescript": "^4.8.2",
+    "typescript-transform-paths": "^3.3.1"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  },
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0"
+  }
+}
