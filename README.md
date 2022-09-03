@@ -368,7 +368,7 @@ There's really no magic to the enum object itself, *but* the value comes in when
 
 ## Limitations
 
-- Does not work at all with arrays.
+- Does not work with arrays.
   - This shouldn't be a problem for the deep-enum constant use case, but for the deep-enum interface use case, you just have to use the accessors to change the array as hole (no partial updates for arrays).
 
 ## Benchmarks
