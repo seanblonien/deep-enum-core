@@ -368,8 +368,19 @@ There's really no magic to the enum object itself, *but* the value comes in when
 
 ## Limitations
 
-Doesn't operate on arrays
+- Does not work at all with arrays.
+  - This shouldn't be a problem for the deep-enum constant use case, but for the deep-enum interface use case, you just have to use the accessors to change the array as hole (no partial updates for arrays).
 
 ## Benchmarks
 
 ## Related Projects
+
+I haven't found other projects related to this deep enum concept explicitly (let me know if you find something similar!), but I have found plenty related to deep accessing properties
+
+- [set-value](https://github.com/jonschlinkert/set-value)
+- [get-value](https://github.com/jonschlinkert/get-value)
+- [lodash.set](https://lodash.com/docs#set)
+- [lodash.get](https://lodash.com/docs#set)
+- [object-path-immutable](https://github.com/mariocasciaro/object-path-immutable)
+- [object-path](https://github.com/mariocasciaro/object-path)
+- [dot-prop](https://github.com/sindresorhus/dot-prop)
