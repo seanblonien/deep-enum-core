@@ -11,7 +11,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [API](#api)
-- [Motivation](#motivation)
+- [Limitations](#limitations)
 - [Benchmarks](#benchmarks)
 - [Related Projects](#related-projects)
 
@@ -239,139 +239,14 @@ Continue onto the [API](#api) to see the full list of the helper functions you c
 
 </details>
 
-## Motivation Deep Dive
-
-The main reason to use enums is to have stricter type-safety for a set of related constants, while also conveying the semantics of those constants.
-
-Let's take a look at standard TypeScript enums:
-
-```ts
-enum Direction {
-  Up,
-  Down,
-  Left,
-  Right,
-}
-
-function move(direction: Direction) {
-  // ...
-}
-```
-
-This `Direction` enum defines 4 constants (internally represented as `0`, `1`, `2`, and `3`) that relate to eachother, and we can see that being used semantically in a function `move` that takes in a `Direction` parameter.
-
-This is a great interface because we can access the semantically meaningful constant without worrying about what that constant actually is at runtime, allowing us to simply do `move(Direction.Up)` in code, and avoid doing things like `move(0)`.
-
-...but, *what if your constants are hierarchical or deeply nested?*
-
-### Deep-Enums
-
-A **deep-enum** is an object that defines constants in a semantically meaningful way that provides type-safety, like a regular TypeScript enum, while *also allowing said constants to be deeply nested*, which is something you **cannot** do with a regular TypeScript enum.
-
-In an *ideal world*, if this was native to TypeScript, it could look something like this:
-
-```ts
-// CHANGE TO DIRECTIONS EXAMPLE
-enum Animal {
-  Bird: {
-    Parrot,
-    Penguin
-  },
-  Mammal: {
-    Dog,
-    Cat
-  },
-}
-```
-
-However, since this is not the case, we have to use standard TypeScript object interfaces to define a deep-enum like this one:
-
-```ts
-const Animal = {
-  Bird: {
-    Parrot: 'Bird.Parrot',
-    Penguin: 'Bird.Penguin',
-  },
-  Mammal: {
-    Dog: 'Mammal.Dog',
-    Cat: 'Mammal.Cat',
-  },
-};
-
-// or
-
-const Animal = {
-  Bird: {
-    Parrot: 1,
-    Penguin: 2,
-  },
-  Mammal: {
-    Dog: 3,
-    Cat: 4,
-  },
-};
-```
-
-Obviously this is less-than-ideal than the standard enum interface where values are implicitly defined, but because we are defining a static object literal, we *must* specify the property values of each enum value, making it much more verbose. We know the whole point of an enum is that the values should not matter, they just need to be internally unique. But, we need to assign the properties to something just because we need to create a valid object literal.
-
-With standard enums, the object was flat, so you could always access every enum property simply using the dot or property accessor operator. And deep-enums are no different, we can still simply do `Animal.Bird.Parrot` and get an enum value.
-
-Now that we have an object, how do we actually use it to enforce type-safety?
-
-All we need to do is derive a few TypeScript helper interfaces and some helper functions and we can realize the full power of deep-enums.
-
-### Deriving Type-Safe Interfaces
-
-Let's say we want a function with this interface, using the above `Animal` object
-
-```ts
-function move(animal: Animal) {
-  // ...
-}
-```
-
-This exact interface doesn't work for a few reasons
-
-- `Animal` is a value and can't be used as a type
-- `typeof Animal` won't work either, because that's just the type of the Animal object as a whole, not the individual enums (`animal === Animal.Bird.Parrot` breaks)
-- `keyof typeof Animal` won't work because that only gives us top-level keys, and not the nested enums.
-
-What we really want is all valid enum keys as a type itself. So we could do something like this
-
-```ts
-
-type AnimalType = typeof Animal.Bird.Parrot |  typeof Animal.Bird.Penguin | typeof Animal.Mammal.Dog | typeof Animal.Mammal.Cat;
-function move(animal: AnimalType) {
-  if (animal === Animal.Bird.Parrot) {  
-    // ...
-  }
-}
-```
-
-This works. But clearly, the second you start adding more to your enum, you have the manually duplicate type information which is an anti-pattern and should be avoided.
-
-Luckily, since [TypeScript 4.1](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1-rc/) when recursive conditional types and template literal types were introduced, we can use TypeScript to derive a type-safe interface for `Animal`. This library derives the type-safe interface of your object for you so we get both simplicitly and verbose type-safety at the same time.
-
-See the [Deep-Enum Constants](#deep-enum-constants) section for this final code usage showing the `move` function with type-safety.
-
-### The Trick
-
-Quite simply, this library just converts a normal JavaScript object to a constant JavaScript object whose properties are replaced with each property's path as its value. So when you refer to an enum's nested property, you're actually just refferring to a string representation of the path of that property.
-
-```ts
-const obj = {a: {b: {c: 'value'}}};
-const MY_ENUM = createDeepEnumInterface(obj);
-console.log(MY_ENUM.a.b.c); // 'a.b.c'
-```
-
-There's really no magic to the enum object itself, *but* the value comes in when you use the enum object with the type-safe helper functions of this library for getting/setting deeply nested values in an object using the enum as an interface. This allows you to further decouple "how" objects are updated, and all you need is the "path" and "value" of a property to update.
-
 ## Limitations
 
 - Does not work with arrays.
   - This shouldn't be a problem for the deep-enum constant use case, but for the deep-enum interface use case, you just have to use the accessors to change the array as hole (no partial updates for arrays).
 
 ## Benchmarks
+
+WIP
 
 ## Related Projects
 
