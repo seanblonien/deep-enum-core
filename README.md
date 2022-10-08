@@ -32,7 +32,7 @@ A deep-enum constant is a constant, readonly object that is used to semantically
 Here is an example of creating a deep-enum constant for storing specifc values (i.e. the value of the enum needs to be a *specific* string or number):
 
 <details>
-  <summary><i>deep-enum constant usage</i></summary>
+  <summary><i>deep-enum constant usage ⬇</i></summary>
 
 ```ts
 // (excluding import statements)
@@ -75,7 +75,7 @@ move('invalid');                  // ❌ Argument of type '"invalid"' is not ass
 But sometimes, you don't really need to store a specific value for an enum, you just want the type-safety and explicit nature of the enum. In this case, you can create a deep-enum interface that **ignores the enum values**, and **creates new, unique enum values for you** like so:
 
 <details>
-  <summary><i>deep-enum interface (constant) usage</i></summary>
+  <summary><i>deep-enum interface (constant) usage ⬇</i></summary>
 
 ```ts
 // AnimalEnum.ts
@@ -125,7 +125,7 @@ move(0);                     // ❌ Argument of type '0' is not assignable to pa
 A deep-enum interface provides you with a type-safe index to any object with the same interface. This means we can use it to access (get/set, read/write) deeply nested properties of objects using the enum as the interface, abstract from the object that is being changed. All you need is the deep-enum interface to specify which property/path you want to update on a given object of that same interface.
 
 <details>
-  <summary><i>deep-enum interface (accessor) usage</i></summary>
+  <summary><i>deep-enum interface (accessor) usage ⬇</i></summary>
 
 ```ts
 // a TypeScript interface that is static that we want to make a deep-enum
@@ -233,7 +233,7 @@ Continue onto the [API](#api) to see the full list of the helper functions you c
           AnimalEnum.Mammal.Dog === "Mammal.Dog123" // true
       ```
       <!-- markdownlint-enable MD031 -->
-    - **NOTE**: you don't need to always use the `postfixIdentifier` param. You can just add it, see if there are type errors, and remove it. No need to keep it in the code (unless you have other purposes for it).
+    - **NOTE**: you don't need to always use the `postfixIdentifier` param. You can just add it, see if there are type errors, and remove it. No need to keep it in the code (unless you find other purposes for it).
 - **Returns**
   - the deep-enum object which holds the paths that can be used to index into the same interface
 
@@ -242,7 +242,7 @@ Continue onto the [API](#api) to see the full list of the helper functions you c
 ## Limitations
 
 - Does not work with arrays.
-  - This shouldn't be a problem for the deep-enum constant use case, but for the deep-enum interface use case, you just have to use the accessors to change the array as hole (no partial updates for arrays).
+  - This shouldn't be a problem for the deep-enum constant use case, but for the deep-enum interface use case, you just have to use the accessors to change the array as hole (no partial/deeply updates for arrays).
 
 ## Benchmarks
 
@@ -250,7 +250,7 @@ WIP
 
 ## Related Projects
 
-I haven't found other projects related to this deep enum concept explicitly (let me know if you find something similar!), but I have found plenty related to deep accessing properties
+I haven't found other projects related to this deep enum concept explicitly (let me know if you find something similar!), but I have found plenty related to deep property accessing
 
 - [set-value](https://github.com/jonschlinkert/set-value)
 - [get-value](https://github.com/jonschlinkert/get-value)
